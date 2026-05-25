@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liderança Conectada 360 Graus | Integração Estratégica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root { --burgundy: #5C2A2A; --gold: #D4A017; --bg-zen: #FDFCFB; --text-body: #4A4A4A; }
+        body { background-color: var(--bg-zen); color: var(--text-body); font-family: 'Inter', sans-serif; line-height: 1.8; }
+        .serif { font-family: 'Playfair Display', serif; }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .gold-line { width: 60px; height: 1px; background: var(--gold); margin: 2rem auto; }
+        .nav-logo { height: 45px; width: auto; object-fit: contain; }
+    </style>
+</head>
+<body>
+
+    <nav class="fixed top-0 w-full h-[70px] bg-white/95 border-b border-gray-100 z-50 flex items-center px-8 justify-between">
+        <img src="/static/images/lideranca_conectada.png" alt="Liderança Conectada 360" class="nav-logo">
+        <div class="hidden md:flex space-x-8 text-[10px] uppercase tracking-[3px] font-semibold text-gray-400">
+            <a href="#proposta" class="hover:text-amber-800">O Conceito</a>
+            <a href="#impacto" class="hover:text-amber-800">ROI & Impacto</a>
+            <a href="#metodologia" class="hover:text-amber-800">Metodologia</a>
+            <a href="#especialistas" class="hover:text-amber-800">Especialistas</a>
+        </div>
+        <div class="text-[11px] text-[#5C2A2A] font-bold uppercase tracking-wider">Monica Motta & Renata Gioia</div>
+    </nav>
+
+    <header class="min-h-screen flex flex-col items-center justify-center text-center px-6">
+        <img src="/static/images/lideranca_conectada.png" alt="Logo" class="w-48 mb-12 reveal">
+        <h1 class="serif text-4xl md:text-6xl text-[#5C2A2A] mb-6 reveal">Liderança Conectada 360 Graus</h1>
+        <p class="text-xl font-light text-gray-500 max-w-3xl reveal">Estratégias de liderança para performance sustentável e continuidade do negócio.</p>
+        <div class="w-px h-24 bg-gradient-to-b from-[#D4A017] to-transparent mt-12 reveal"></div>
+    </header>
+
+    <section id="proposta" class="py-32 px-6 max-w-6xl mx-auto">
+        <div class="reveal text-center mb-20">
+            <h2 class="serif text-3xl md:text-5xl text-[#5C2A2A] italic">"Sustentabilidade não nasce da capacidade isolada, mas da integração inteligente."</h2>
+            <div class="gold-line"></div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-16">
+            <div class="reveal">
+                <p class="text-lg mb-6">A fragmentação entre estratégia, operação e ambiente humano é o que compromete a continuidade das organizações.</p>
+                <p class="font-light text-gray-500">A NR-01 torna visíveis os riscos psicossociais, evidenciando que decisões de liderança moldam diretamente o ambiente e o resultado final.</p>
+            </div>
+            <div class="reveal border-l border-[#D4A017] pl-12">
+                <ul class="space-y-4 text-sm uppercase tracking-wider text-gray-600">
+                    <li>• Decisões estratégicas vs. execução</li>
+                    <li>• Conformidade e Segurança Institucional</li>
+                    <li>• Gestão de Riscos Psicossociais (NR-01)</li>
+                    <li>• Performance de times em 25% superior</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="impacto" class="bg-[#5C2A2A] py-32 text-white overflow-hidden">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <h2 class="serif text-4xl mb-12 reveal">O Valor da Decisão Estratégica</h2>
+            <div class="grid md:grid-cols-3 gap-12">
+                <div class="reveal">
+                    <div class="text-4xl font-light mb-4">4 para 1</div>
+                    <p class="text-xs uppercase tracking-widest opacity-70">ROI: Retorno sobre Investimento em Saúde Mental</p>
+                </div>
+                <div class="reveal">
+                    <div class="text-4xl font-light mb-4">77%</div>
+                    <p class="text-xs uppercase tracking-widest opacity-70">Dos colaboradores relatam alto estresse ocupacional</p>
+                </div>
+                <div class="reveal">
+                    <div class="text-4xl font-light mb-4">+134%</div>
+                    <p class="text-xs uppercase tracking-widest opacity-70">Aumento em afastamentos por transtornos mentais</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="metodologia" class="py-32 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="serif text-4xl text-center text-[#5C2A2A] mb-20 reveal">Metodologia 360 Graus</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="p-12 border border-[#D4A017] reveal hover:bg-[#FDFCFB] transition">
+                    <span class="text-[10px] uppercase tracking-widest text-[#D4A017]">Fase 01</span>
+                    <h3 class="serif text-2xl my-4 text-[#5C2A2A]">Diagnóstico</h3>
+                    <p class="text-sm font-light">Leitura sistêmica de gargalos decisórios e riscos ocultos que comprometem a perenidade.</p>
+                </div>
+                <div class="p-12 border border-[#D4A017] reveal hover:bg-[#FDFCFB] transition">
+                    <span class="text-[10px] uppercase tracking-widest text-[#D4A017]">Fase 02</span>
+                    <h3 class="serif text-2xl my-4 text-[#5C2A2A]">Intervenção</h3>
+                    <p class="text-sm font-light">Implementação de estratégias de arquitetura relacional e suporte comportamental.</p>
+                </div>
+                <div class="p-12 border border-[#D4A017] reveal hover:bg-[#FDFCFB] transition">
+                    <span class="text-[10px] uppercase tracking-widest text-[#D4A017]">Fase 03</span>
+                    <h3 class="serif text-2xl my-4 text-[#5C2A2A]">Continuidade</h3>
+                    <p class="text-sm font-light">Fortalecimento da cultura para resultados sustentáveis e lucro saudável.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="especialistas" class="py-32 px-6 max-w-6xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-20">
+            <div class="reveal text-center">
+                <div class="border border-[#D4A017] p-2 inline-block mb-8">
+                    <img src="/static/images/Renata.png" alt="Renata Gioia" class="w-[300px] h-[380px] object-cover object-top">
+                </div>
+                <h3 class="serif text-2xl text-[#5C2A2A]">Renata Gioia</h3>
+                <p class="text-sm font-light text-gray-500 max-w-xs mx-auto mt-4">Especialista em cultura organizacional, visão sistêmica e arquitetura relacional.</p>
+            </div>
+            <div class="reveal text-center">
+                <div class="border border-[#D4A017] p-2 inline-block mb-8">
+                    <img src="/static/images/Monica.png" alt="Monica Motta" class="w-[300px] h-[380px] object-cover object-top">
+                </div>
+                <h3 class="serif text-2xl text-[#5C2A2A]">Monica Motta</h3>
+                <p class="text-sm font-light text-gray-500 max-w-xs mx-auto mt-4">Especialista comportamental em ciência aplicada à estratégia e decisão.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-50 py-20 text-center border-t border-gray-100">
+        <img src="/static/images/lideranca_conectada.png" class="h-12 mx-auto mb-8 opacity-50">
+        <p class="serif text-2xl text-[#5C2A2A] italic mb-12">Integração que impulsiona performance e sustenta resultados.</p>
+        <div class="text-[10px] uppercase tracking-[2px] space-x-12">
+            <span>contato@liderancaconectada.com.br</span>
+            <span>São Paulo | Vitória</span>
+        </div>
+    </footer>
+
+    <script>
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) reveals[i].classList.add("active");
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        window.addEventListener("load", reveal);
+    </script>
+</body>
+</html>

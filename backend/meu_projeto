@@ -1,0 +1,9 @@
+server {
+    listen 80;
+    server_name 84.247.162.59;
+
+    location / {
+        proxy_pass http://unix:/var/www/meu_projeto/web/meu_projeto.sock;
+        include proxy_params;
+    }
+}

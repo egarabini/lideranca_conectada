@@ -1,0 +1,94 @@
+/* Variáveis de Cores e Estilo */
+:root {
+    --burgundy: #5C2A2A;
+    --gold: #D4A017;
+    --bg-zen: #FDFCFB;
+    --text-body: #4A4A4A;
+}
+
+/* Reset e Base */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+    background-color: var(--bg-zen); 
+    color: var(--text-body); 
+    font-family: 'Inter', sans-serif;
+    line-height: 1.8;
+}
+.serif { font-family: 'Playfair Display', serif; }
+
+/* Navbar */
+.navbar-fixed {
+    position: fixed;
+    top: 0; width: 100%; height: 60px;
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(212, 160, 23, 0.1);
+    z-index: 1000;
+    display: flex; align-items: center;
+}
+.nav-container {
+    max-width: 1200px; margin: 0 auto; width: 100%;
+    padding: 0 2rem; display: flex; justify-content: space-between; align-items: center;
+}
+.nav-logo { height: 40px; width: auto; object-fit: contain; }
+.nav-links a { 
+    text-transform: uppercase; font-size: 10px; letter-spacing: 2px; 
+    color: var(--text-body); margin: 0 15px; text-decoration: none; transition: color 0.3s;
+}
+.nav-links a:hover { color: var(--gold); }
+.nav-brand-names { font-size: 11px; font-weight: 600; color: var(--burgundy); text-transform: uppercase; }
+
+/* Hero */
+.hero {
+    min-height: 90vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    padding: 0 1rem;
+}
+.hero-logo { width: 220px; height: auto; object-fit: contain; margin-bottom: 3rem; }
+.title-main { color: var(--burgundy); font-size: clamp(2rem, 5vw, 4rem); margin-bottom: 1.5rem; }
+.subtitle { font-weight: 300; font-size: 1.2rem; color: #888; max-width: 600px; }
+.scroll-indicator { width: 1px; height: 80px; background: linear-gradient(to bottom, var(--gold), transparent); margin-top: 3rem; }
+
+/* Seções e Grades */
+.section-container { max-width: 1100px; margin: 0 auto; padding: 100px 2rem; }
+.section-title { color: var(--burgundy); font-size: 2.5rem; margin-bottom: 2rem; }
+.gold-line-left { border-left: 1px solid var(--gold); padding-left: 2rem; }
+.manifesto-list ul { list-style: none; color: #777; font-size: 0.9rem; }
+.manifesto-list li { margin-bottom: 1rem; position: relative; }
+
+/* Metodologia (Cards) */
+.decision-card {
+    border: 1px solid rgba(212, 160, 23, 0.3);
+    padding: 3rem 2rem; transition: all 0.5s ease;
+    background: transparent;
+}
+.decision-card:hover { background: #fff; border-color: var(--gold); transform: translateY(-5px); }
+.card-tag { 
+    display: block; text-transform: uppercase; font-size: 11px; 
+    letter-spacing: 3px; color: var(--gold); margin-bottom: 1rem; 
+}
+
+/* Fotos das Especialistas - RESOLUÇÃO DE DEFORMAÇÃO */
+.expert-profile { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.expert-image-wrapper {
+    border: 1px solid var(--gold);
+    padding: 6px; margin-bottom: 2rem;
+    background-color: #fff;
+    display: inline-block;
+}
+.expert-image {
+    width: 320px;   /* Largura Fixa */
+    height: 400px;  /* Altura Fixa Proporcional 4:5 */
+    object-fit: cover; /* Garante que o rosto preencha sem esticar */
+    object-position: top; /* Foca na parte superior da imagem */
+    display: block;
+}
+.expert-name { color: var(--burgundy); font-size: 1.8rem; margin-bottom: 0.5rem; }
+.expert-bio { max-width: 300px; color: #666; font-size: 0.95rem; font-weight: 300; }
+
+/* Footer */
+.footer { background-color: var(--burgundy); color: #fff; padding: 80px 2rem; text-align: center; }
+.footer-logo { height: 50px; width: auto; object-fit: contain; filter: brightness(0) invert(1); margin-bottom: 3rem; opacity: 0.8; }
+.footer-title { font-size: 2rem; margin-bottom: 2.5rem; letter-spacing: 1px; }
+.footer-contact-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; margin-bottom: 4rem; font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase; }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 3rem; }
+.footer-bottom p { font-size: 11px; color: rgba(255,255,255,0.5); max-width: 500px; margin: 0 auto; }
