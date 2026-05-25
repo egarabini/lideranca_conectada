@@ -1,18 +1,46 @@
-venv/
-.venv/
+# Python bytecode and caches
 __pycache__/
 *.py[cod]
-
-.env
-.env.*
-!.env.example
-
-deploy.tar.gz
-*.zip
-
+*$py.class
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 
+# Virtual environments and local config
+.Python
+.venv/
+venv/
+env/
+ENV/
+.env
+.env.*
+!.env.example
+
+# Build and packaging output
+build/
+dist/
+downloads/
+eggs/
+.eggs/
+*.egg-info/
+*.egg
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+
+# App/runtime artifacts
+instance/
+.webassets-cache
+*.log
+db.sqlite3
+db.sqlite3-journal
+deploy.tar.gz
+*.zip
+
+# Editor/OS files
 .DS_Store
 Thumbs.db
+.idea/
+.vscode/
+tempCodeRunnerFile.py
