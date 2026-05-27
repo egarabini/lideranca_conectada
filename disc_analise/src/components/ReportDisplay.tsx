@@ -212,6 +212,7 @@ export const ReportDisplay: React.FC<ReportDisplayProps> = ({ result, interviewe
   });
 
   return (
+    <>
     <div className={`w-full bg-white ${exporting ? 'disc-report-exporting' : ''}`} ref={reportRef}>
       <div className="mb-6 flex justify-between items-center gap-5 pb-4 border-b-2 border-carbon-gray-20">
         <div className="flex items-center gap-3">
@@ -466,8 +467,10 @@ export const ReportDisplay: React.FC<ReportDisplayProps> = ({ result, interviewe
         </p>
       </div>
 
-      {/* Recommendations */}
-      <div className="mb-6 bg-carbon-green-10 border-l-4 border-carbon-green-60 p-5" data-pdf-ignore="true">
+    </div>
+
+    {/* Recommendations */}
+    <div className="mb-6 bg-carbon-green-10 border-l-4 border-carbon-green-60 p-5">
         <h3 className="text-xs font-semibold text-carbon-gray-100 mb-3 uppercase tracking-widest">
           Recomendações de comunicação
         </h3>
@@ -480,6 +483,6 @@ export const ReportDisplay: React.FC<ReportDisplayProps> = ({ result, interviewe
           ))}
         </ul>
       </div>
-    </div>
+    </>
   );
 };

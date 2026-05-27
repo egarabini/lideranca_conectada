@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import type { DISCAnalysisResult } from '../constants/discFramework';
 
-export type AnalysisMode = 'demo';
+export type AnalysisMode = 'demo' | 'openrouter' | 'anthropic' | 'gemini' | 'openai';
 
 interface UseDISCAnalysisReturn {
   analyze: (transcript: string, mode: AnalysisMode) => Promise<DISCAnalysisResult>;
@@ -121,7 +121,7 @@ export const useDISCAnalysis = (): UseDISCAnalysisReturn => {
     setResult(null);
   }, []);
 
-  const analyze = useCallback(async (transcript: string, _mode: AnalysisMode): Promise<DISCAnalysisResult> => {
+  const analyze = useCallback(async (transcript: string, mode: AnalysisMode): Promise<DISCAnalysisResult> => {
     // Validation
     if (!transcript || transcript.trim().length === 0) {
       const errorMsg = 'Insira uma transcrição para analisar.';
@@ -141,10 +141,38 @@ export const useDISCAnalysis = (): UseDISCAnalysisReturn => {
     setResult(null);
 
     try {
-      const demoResult = buildDemoAnalysis(transcript);
-      setResult(demoResult);
+      if (mode === 'demo') {
+        const demoResult = buildDemoAnalysis(transcript);
+        setResult(demoResult);
+        setLoading(false);
+        return demoResult;
+      }
+
+      const response = await fetch(`${import.meta.env.BASE_URL}api/analyze`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ transcript, mode }),
+      });
+
+      const payload = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        const errorMsg = payload?.error || 'Não foi possível concluir a análise.';
+        setError(errorMsg);
+        setLoading(false);
+        throw new Error(errorMsg);
+      }
+
+      const parsedResult = payload as DISCAnalysisResult;
+      if (!parsedResult.overall_profile || !parsedResult.detailed_breakdown) {
+        throw new Error('Formato de resposta inválido da API.');
+      }
+
+      setResult(parsedResult);
       setLoading(false);
-      return demoResult;
+      return parsedResult;
 
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Ocorreu um erro desconhecido.';

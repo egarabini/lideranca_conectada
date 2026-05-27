@@ -34,6 +34,17 @@ services:
     restart: unless-stopped
     ports:
       - "${DISC_PORT:-5173}:80"
+    environment:
+      DISC_BASIC_USER: ${DISC_BASIC_USER:-disc}
+      DISC_BASIC_PASSWORD: ${DISC_BASIC_PASSWORD}
+      VITE_OPENAI_API_KEY: ${VITE_OPENAI_API_KEY:-}
+      VITE_OPENROUTER_API_KEY: ${VITE_OPENROUTER_API_KEY:-}
+      VITE_GEMINI_API_KEY: ${VITE_GEMINI_API_KEY:-}
+      VITE_ANTHROPIC_API_KEY: ${VITE_ANTHROPIC_API_KEY:-}
+      VITE_OPENAI_MODEL: ${VITE_OPENAI_MODEL:-gpt-4o-mini}
+      VITE_OPENROUTER_MODEL: ${VITE_OPENROUTER_MODEL:-openai/gpt-4o-mini}
+      VITE_GEMINI_MODEL: ${VITE_GEMINI_MODEL:-gemini-1.5-flash}
+      VITE_ANTHROPIC_MODEL: ${VITE_ANTHROPIC_MODEL:-claude-3-5-haiku-latest}
 
 volumes:
   postgres_data:

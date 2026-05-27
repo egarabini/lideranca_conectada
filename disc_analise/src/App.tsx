@@ -193,6 +193,10 @@ function App() {
                 aria-label="Selecionar modo de análise"
               >
                 <option value="demo">Demo</option>
+                <option value="openrouter">OpenRouter</option>
+                <option value="anthropic">Anthropic</option>
+                <option value="gemini">Gemini</option>
+                <option value="openai">OpenAI</option>
               </select>
             </div>
 
@@ -257,7 +261,7 @@ function App() {
         {!result && !loading && (
           <div className="mt-8 pt-6 border-t-2 border-carbon-gray-20">
             <p className="text-sm text-carbon-gray-70 text-center">
-              Modo atual: Demo • Recomendado: 150+ palavras para maior confiabilidade
+              Modo atual: {analysisMode === 'openrouter' ? 'OpenRouter' : analysisMode === 'anthropic' ? 'Anthropic' : analysisMode === 'gemini' ? 'Gemini' : analysisMode === 'openai' ? 'OpenAI' : 'Demo'} • Recomendado: 150+ palavras para maior confiabilidade
             </p>
           </div>
         )}
