@@ -14,6 +14,8 @@
         .reveal.active { opacity: 1; transform: translateY(0); }
         .gold-line { width: 60px; height: 1px; background: var(--gold); margin: 2rem auto; }
         .nav-logo { height: 45px; width: auto; object-fit: contain; }
+        .tool-panel { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.45s ease, opacity 0.3s ease; }
+        .method-card.active .tool-panel { max-height: 560px; opacity: 1; }
     </style>
 </head>
 <body>
@@ -81,11 +83,15 @@
         <div class="max-w-6xl mx-auto px-6">
             <h2 class="serif text-4xl text-center text-[#5C2A2A] mb-20 reveal">Metodologia 360 Graus</h2>
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="p-12 border border-[#D4A017] reveal hover:bg-[#FDFCFB] transition">
+                <div class="method-card p-12 border border-[#D4A017] reveal hover:bg-[#FDFCFB] transition" tabindex="0">
                     <span class="text-[10px] uppercase tracking-widest text-[#D4A017]">Fase 01</span>
                     <h3 class="serif text-2xl my-4 text-[#5C2A2A]">Diagnóstico</h3>
                     <p class="text-sm font-light">Escuta, dados e leitura comportamental e cultural para compreender o cenário real da organização.</p>
-                    <div class="mt-8 pt-6 border-t border-[#D4A017]/40">
+                    <button type="button" class="tool-toggle mt-6 text-[10px] uppercase tracking-[2px] text-[#5C2A2A] border-b border-[#D4A017] hover:text-[#D4A017] transition">
+                        Ver instrumentos
+                    </button>
+                    <div class="tool-panel mt-6 border-t border-[#D4A017]/40">
+                        <div class="pt-6">
                         <p class="text-[10px] uppercase tracking-[2px] text-[#D4A017] font-semibold mb-4">Instrumentos de apoio</p>
                         <ul class="space-y-3 text-xs text-gray-500 leading-relaxed">
                             <li>• Entrevistas estruturadas com líderes e equipes</li>
@@ -98,17 +104,52 @@
                         <a href="/disc/" class="mt-6 inline-block text-[10px] uppercase tracking-[2px] text-[#5C2A2A] border-b border-[#D4A017] hover:text-[#D4A017] transition">
                             Acessar analisador DISC
                         </a>
+                        </div>
                     </div>
                 </div>
-                <div class="p-12 border border-[#D4A017] reveal hover:bg-[#FDFCFB] transition">
+                <div class="method-card p-12 border border-[#D4A017] reveal hover:bg-[#FDFCFB] transition" tabindex="0">
                     <span class="text-[10px] uppercase tracking-widest text-[#D4A017]">Fase 02</span>
                     <h3 class="serif text-2xl my-4 text-[#5C2A2A]">Intervenção</h3>
                     <p class="text-sm font-light">Ações práticas para desenvolver liderança, comunicação e relações de trabalho.</p>
+                    <button type="button" class="tool-toggle mt-6 text-[10px] uppercase tracking-[2px] text-[#5C2A2A] border-b border-[#D4A017] hover:text-[#D4A017] transition">
+                        Ver instrumentos
+                    </button>
+                    <div class="tool-panel mt-6 border-t border-[#D4A017]/40">
+                        <div class="pt-6">
+                        <p class="text-[10px] uppercase tracking-[2px] text-[#D4A017] font-semibold mb-4">Instrumentos de apoio</p>
+                        <ul class="space-y-3 text-xs text-gray-500 leading-relaxed">
+                            <li>• Workshops de liderança, comunicação e feedback</li>
+                            <li>• Devolutivas individuais e coletivas de mapeamento comportamental</li>
+                            <li>• Planos de desenvolvimento individual para líderes</li>
+                            <li>• Mentoria ou coaching executivo para liderança</li>
+                            <li>• Mediação de conflitos e alinhamento entre áreas</li>
+                            <li>• Rituais de comunicação, tomada de decisão e acompanhamento de equipe</li>
+                            <li>• Plano de ação para riscos psicossociais priorizados</li>
+                        </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="p-12 border border-[#D4A017] reveal hover:bg-[#FDFCFB] transition">
+                <div class="method-card p-12 border border-[#D4A017] reveal hover:bg-[#FDFCFB] transition" tabindex="0">
                     <span class="text-[10px] uppercase tracking-widest text-[#D4A017]">Fase 03</span>
                     <h3 class="serif text-2xl my-4 text-[#5C2A2A]">Continuidade</h3>
                     <p class="text-sm font-light">Acompanhamento, indicadores e governança para sustentar a evolução.</p>
+                    <button type="button" class="tool-toggle mt-6 text-[10px] uppercase tracking-[2px] text-[#5C2A2A] border-b border-[#D4A017] hover:text-[#D4A017] transition">
+                        Ver instrumentos
+                    </button>
+                    <div class="tool-panel mt-6 border-t border-[#D4A017]/40">
+                        <div class="pt-6">
+                        <p class="text-[10px] uppercase tracking-[2px] text-[#D4A017] font-semibold mb-4">Instrumentos de apoio</p>
+                        <ul class="space-y-3 text-xs text-gray-500 leading-relaxed">
+                            <li>• Painel de indicadores de evolução</li>
+                            <li>• Reuniões periódicas de acompanhamento com liderança</li>
+                            <li>• Pesquisas pulse de clima, segurança psicológica e engajamento</li>
+                            <li>• Ciclos de feedback e revisão de planos de ação</li>
+                            <li>• Matriz de maturidade da liderança</li>
+                            <li>• Relatórios executivos de evolução e riscos</li>
+                            <li>• Comitê de continuidade, cultura e saúde organizacional</li>
+                        </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -153,6 +194,36 @@
         }
         window.addEventListener("scroll", reveal);
         window.addEventListener("load", reveal);
+
+        document.addEventListener("click", function(event) {
+            var toggle = event.target.closest(".tool-toggle");
+            var cards = document.querySelectorAll(".method-card");
+
+            if (toggle) {
+                var currentCard = toggle.closest(".method-card");
+                var shouldOpen = !currentCard.classList.contains("active");
+
+                cards.forEach(function(card) {
+                    card.classList.remove("active");
+                    var button = card.querySelector(".tool-toggle");
+                    if (button) button.textContent = "Ver instrumentos";
+                });
+
+                if (shouldOpen) {
+                    currentCard.classList.add("active");
+                    toggle.textContent = "Ocultar instrumentos";
+                }
+                return;
+            }
+
+            if (!event.target.closest(".method-card")) {
+                cards.forEach(function(card) {
+                    card.classList.remove("active");
+                    var button = card.querySelector(".tool-toggle");
+                    if (button) button.textContent = "Ver instrumentos";
+                });
+            }
+        });
     </script>
 </body>
 </html>
