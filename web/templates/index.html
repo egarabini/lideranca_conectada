@@ -15,7 +15,7 @@
         .gold-line { width: 60px; height: 1px; background: var(--gold); margin: 2rem auto; }
         .nav-logo { height: 45px; width: auto; object-fit: contain; }
         .tool-panel { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.45s ease, opacity 0.3s ease; }
-        .method-card.active .tool-panel { max-height: 560px; opacity: 1; }
+        .method-card.tools-open .tool-panel { max-height: 560px; opacity: 1; }
     </style>
 </head>
 <body>
@@ -201,16 +201,16 @@
 
             if (toggle) {
                 var currentCard = toggle.closest(".method-card");
-                var shouldOpen = !currentCard.classList.contains("active");
+                var shouldOpen = !currentCard.classList.contains("tools-open");
 
                 cards.forEach(function(card) {
-                    card.classList.remove("active");
+                    card.classList.remove("tools-open");
                     var button = card.querySelector(".tool-toggle");
                     if (button) button.textContent = "Ver instrumentos";
                 });
 
                 if (shouldOpen) {
-                    currentCard.classList.add("active");
+                    currentCard.classList.add("tools-open");
                     toggle.textContent = "Ocultar instrumentos";
                 }
                 return;
@@ -218,7 +218,7 @@
 
             if (!event.target.closest(".method-card")) {
                 cards.forEach(function(card) {
-                    card.classList.remove("active");
+                    card.classList.remove("tools-open");
                     var button = card.querySelector(".tool-toggle");
                     if (button) button.textContent = "Ver instrumentos";
                 });
