@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AlertCircle, Download, RefreshCw, Sparkles } from 'lucide-react';
+import { AlertCircle, ArrowLeft, Download, RefreshCw, Sparkles } from 'lucide-react';
 import { TextAreaInput } from './components/TextAreaInput';
 import { ReportDisplay } from './components/ReportDisplay';
 import { LoadingSpinner } from './components/LoadingSpinner';
@@ -71,6 +71,16 @@ function App() {
       <div className="max-w-6xl mx-auto bg-white shadow-carbon-lg border border-carbon-gray-20 p-6 pb-12 sm:p-8 sm:pb-16">
         {/* Header */}
         <div className="mb-10">
+          <div className="mb-6 flex justify-between gap-4">
+            <a
+              href="/"
+              className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-carbon-gray-60 hover:text-carbon-blue-60"
+              aria-label="Retornar para a página principal"
+            >
+              <ArrowLeft size={16} strokeWidth={2.5} />
+              Retornar
+            </a>
+          </div>
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-carbon-blue-60 p-2">
               <Sparkles className="text-white" size={28} strokeWidth={2.5} />
