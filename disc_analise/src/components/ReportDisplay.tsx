@@ -9,6 +9,7 @@ interface ReportDisplayProps {
 }
 
 const clampScore = (score: number) => Math.min(Math.max(Math.round(score), 0), 100);
+const logoUrl = `${import.meta.env.BASE_URL}lideranca_conectada.png`;
 
 export const ReportDisplay: React.FC<ReportDisplayProps> = ({ result, interviewer, interviewee }) => {
   const reportRef = React.useRef<HTMLDivElement>(null);
@@ -98,12 +99,16 @@ export const ReportDisplay: React.FC<ReportDisplayProps> = ({ result, interviewe
         import('html2canvas'),
         import('jspdf'),
       ]);
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
 
       const canvas = await html2canvas(reportRef.current, {
         scale: 3,
         useCORS: true,
         backgroundColor: '#ffffff',
         logging: false,
+        windowWidth: 1120,
         ignoreElements: (element) => element.getAttribute('data-pdf-ignore') === 'true',
       });
 
@@ -207,13 +212,21 @@ export const ReportDisplay: React.FC<ReportDisplayProps> = ({ result, interviewe
   });
 
   return (
-    <div className="w-full bg-white" ref={reportRef}>
-      <div className="mb-6 flex justify-between items-center pb-4 border-b-2 border-carbon-gray-20">
+    <div className={`w-full bg-white ${exporting ? 'disc-report-exporting' : ''}`} ref={reportRef}>
+      <div className="mb-6 flex justify-between items-center gap-5 pb-4 border-b-2 border-carbon-gray-20">
         <div className="flex items-center gap-3">
-          <TrendingUp className="text-carbon-blue-60" size={24} strokeWidth={2.5} />
-          <h2 className="text-2xl font-semibold text-carbon-gray-100 tracking-tight">
-            Relatório de Análise
-          </h2>
+          <img
+            src={logoUrl}
+            alt="Liderança Conectada 360 Graus"
+            className="h-14 w-auto object-contain"
+          />
+          <div className="h-10 w-px bg-carbon-yellow-60" aria-hidden="true" />
+          <div className="flex items-center gap-2">
+            <TrendingUp className="text-carbon-blue-60" size={24} strokeWidth={2.5} />
+            <h2 className="text-2xl font-semibold text-carbon-gray-100 tracking-tight">
+              Relatório de Análise DISC
+            </h2>
+          </div>
         </div>
         <button
           onClick={handleExport}
@@ -258,42 +271,42 @@ export const ReportDisplay: React.FC<ReportDisplayProps> = ({ result, interviewe
       </div>
 
       {/* Executive Summary */}
-      <div className="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-carbon-gray-10 border-l-4 border-carbon-blue-60 p-5">
+      <div className="pdf-summary-grid mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="pdf-summary-card bg-carbon-gray-10 border-l-4 border-carbon-blue-60 p-5">
           <h3 className="text-xs font-semibold text-carbon-gray-70 mb-3 uppercase tracking-widest">
             Média geral
           </h3>
-          <p className="text-5xl font-bold text-carbon-blue-60 mb-2">
+          <p className="pdf-metric text-5xl font-bold text-carbon-blue-60 mb-2">
             {averageScore}
           </p>
           <p className="text-sm text-carbon-gray-90 font-medium">de 100</p>
         </div>
 
-        <div className="bg-carbon-gray-10 border-l-4 border-carbon-blue-60 p-5">
+        <div className="pdf-summary-card bg-carbon-gray-10 border-l-4 border-carbon-blue-60 p-5">
           <h3 className="text-xs font-semibold text-carbon-gray-70 mb-3 uppercase tracking-widest">
             Maior dimensão
           </h3>
-          <p className={`text-5xl font-bold ${getDimensionColor(highestDimension)} mb-2`}>{highestDimension}</p>
+          <p className={`pdf-metric text-5xl font-bold ${getDimensionColor(highestDimension)} mb-2`}>{highestDimension}</p>
           <p className="text-sm text-carbon-gray-90 font-medium">
             {getDimensionLabel(highestDimension)} ({highestScore})
           </p>
         </div>
 
-        <div className="bg-carbon-gray-10 border-l-4 border-carbon-blue-60 p-5">
+        <div className="pdf-summary-card bg-carbon-gray-10 border-l-4 border-carbon-blue-60 p-5">
           <h3 className="text-xs font-semibold text-carbon-gray-70 mb-3 uppercase tracking-widest">
             Menor dimensão
           </h3>
-          <p className={`text-5xl font-bold ${getDimensionColor(lowestDimension)} mb-2`}>{lowestDimension}</p>
+          <p className={`pdf-metric text-5xl font-bold ${getDimensionColor(lowestDimension)} mb-2`}>{lowestDimension}</p>
           <p className="text-sm text-carbon-gray-90 font-medium">
             {getDimensionLabel(lowestDimension)} ({lowestScore})
           </p>
         </div>
 
-        <div className="bg-carbon-gray-10 border-l-4 border-carbon-blue-60 p-5">
+        <div className="pdf-summary-card bg-carbon-gray-10 border-l-4 border-carbon-blue-60 p-5">
           <h3 className="text-xs font-semibold text-carbon-gray-70 mb-3 uppercase tracking-widest">
             Amplitude
           </h3>
-          <p className="text-5xl font-bold text-carbon-blue-60 mb-2">{scoreRange}</p>
+          <p className="pdf-metric text-5xl font-bold text-carbon-blue-60 mb-2">{scoreRange}</p>
           <p className="text-sm text-carbon-gray-90 font-medium">
             diferença entre maior e menor pontuação
           </p>

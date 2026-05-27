@@ -52,3 +52,29 @@ body {
   min-height: 100vh;
   background: #fdfcfb;
 }
+
+.disc-report-exporting {
+  width: 1120px !important;
+  max-width: 1120px !important;
+  padding: 0 8px;
+}
+
+.disc-report-exporting .pdf-summary-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+
+.disc-report-exporting .pdf-summary-card {
+  min-width: 0;
+  padding: 16px !important;
+}
+
+.disc-report-exporting .pdf-summary-card h3 {
+  font-size: 10px !important;
+  line-height: 1.25 !important;
+}
+
+.disc-report-exporting .pdf-metric {
+  font-size: 42px !important;
+  line-height: 1 !important;
+}
