@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analisador de Perfil DISC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              'ibm-plex-sans': ['IBM Plex Sans', 'sans-serif'],
+              'ibm-plex-mono': ['IBM Plex Mono', 'monospace'],
+            },
+            colors: {
+              'carbon-gray': {
+                10: '#f4f4f4',
+                20: '#e0e0e0',
+                30: '#c6c6c6',
+                40: '#a8a8a8',
+                50: '#8d8d8d',
+                60: '#6f6f6f',
+                70: '#525252',
+                80: '#393939',
+                90: '#262626',
+                100: '#161616',
+              },
+              'carbon-blue': {
+                10: '#edf5ff',
+                60: '#0f62fe',
+                70: '#0043ce',
+              },
+              'carbon-red': {
+                10: '#fff1f1',
+                50: '#fa4d56',
+                60: '#da1e28',
+                70: '#a2191f',
+              },
+              'carbon-green': {
+                10: '#defbe6',
+                50: '#24a148',
+                60: '#198038',
+                70: '#0e6027',
+              },
+              'carbon-yellow': {
+                10: '#fcf4d6',
+                60: '#f1c21b',
+              },
+            },
+            boxShadow: {
+              'carbon-lg': '0 2px 6px rgba(0,0,0,0.16), 0 8px 24px rgba(0,0,0,0.08)',
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

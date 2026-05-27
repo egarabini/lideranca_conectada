@@ -27,5 +27,13 @@ services:
       db:
         condition: service_healthy
 
+  disc:
+    build:
+      context: ./disc_analise
+    container_name: lc360_disc
+    restart: unless-stopped
+    ports:
+      - "${DISC_PORT:-5173}:80"
+
 volumes:
   postgres_data:

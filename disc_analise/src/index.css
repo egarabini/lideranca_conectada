@@ -1,0 +1,53 @@
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600;700&display=swap");
+
+@source "../index.html";
+@source "./**/*.{js,ts,jsx,tsx}";
+
+@theme {
+  --font-ibm-plex-sans: "IBM Plex Sans", sans-serif;
+  --font-ibm-plex-mono: "IBM Plex Mono", monospace;
+
+  --color-carbon-gray-10: #f4f4f4;
+  --color-carbon-gray-20: #e0e0e0;
+  --color-carbon-gray-30: #c6c6c6;
+  --color-carbon-gray-40: #a8a8a8;
+  --color-carbon-gray-50: #8d8d8d;
+  --color-carbon-gray-60: #6f6f6f;
+  --color-carbon-gray-70: #525252;
+  --color-carbon-gray-80: #393939;
+  --color-carbon-gray-90: #262626;
+  --color-carbon-gray-100: #161616;
+
+  --color-carbon-blue-10: #edf5ff;
+  --color-carbon-blue-60: #0f62fe;
+  --color-carbon-blue-70: #0043ce;
+
+  --color-carbon-red-10: #fff1f1;
+  --color-carbon-red-50: #fa4d56;
+  --color-carbon-red-60: #da1e28;
+  --color-carbon-red-70: #a2191f;
+
+  --color-carbon-green-10: #defbe6;
+  --color-carbon-green-50: #24a148;
+  --color-carbon-green-60: #198038;
+  --color-carbon-green-70: #0e6027;
+
+  --color-carbon-yellow-10: #fcf4d6;
+  --color-carbon-yellow-60: #f1c21b;
+}
+
+@utility shadow-carbon-lg {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16), 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #f4f4f4;
+}
