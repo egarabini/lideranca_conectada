@@ -1,27 +1,28 @@
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;600;700&display=swap");
 
 @source "../index.html";
 @source "./**/*.{js,ts,jsx,tsx}";
 
 @theme {
-  --font-ibm-plex-sans: "IBM Plex Sans", sans-serif;
+  --font-ibm-plex-sans: "Inter", sans-serif;
   --font-ibm-plex-mono: "IBM Plex Mono", monospace;
+  --font-display: "Playfair Display", serif;
 
-  --color-carbon-gray-10: #f4f4f4;
-  --color-carbon-gray-20: #e0e0e0;
-  --color-carbon-gray-30: #c6c6c6;
-  --color-carbon-gray-40: #a8a8a8;
-  --color-carbon-gray-50: #8d8d8d;
-  --color-carbon-gray-60: #6f6f6f;
-  --color-carbon-gray-70: #525252;
-  --color-carbon-gray-80: #393939;
-  --color-carbon-gray-90: #262626;
-  --color-carbon-gray-100: #161616;
+  --color-carbon-gray-10: #fdfcfb;
+  --color-carbon-gray-20: #f1ece8;
+  --color-carbon-gray-30: #ded3cb;
+  --color-carbon-gray-40: #c6b6ad;
+  --color-carbon-gray-50: #9a877d;
+  --color-carbon-gray-60: #75655f;
+  --color-carbon-gray-70: #5f5551;
+  --color-carbon-gray-80: #4a4a4a;
+  --color-carbon-gray-90: #342f2d;
+  --color-carbon-gray-100: #211d1b;
 
-  --color-carbon-blue-10: #edf5ff;
-  --color-carbon-blue-60: #0f62fe;
-  --color-carbon-blue-70: #0043ce;
+  --color-carbon-blue-10: #f7eeee;
+  --color-carbon-blue-60: #5c2a2a;
+  --color-carbon-blue-70: #452020;
 
   --color-carbon-red-10: #fff1f1;
   --color-carbon-red-50: #fa4d56;
@@ -33,8 +34,8 @@
   --color-carbon-green-60: #198038;
   --color-carbon-green-70: #0e6027;
 
-  --color-carbon-yellow-10: #fcf4d6;
-  --color-carbon-yellow-60: #f1c21b;
+  --color-carbon-yellow-10: #fbf3df;
+  --color-carbon-yellow-60: #d4a017;
 }
 
 @utility shadow-carbon-lg {
@@ -49,5 +50,5 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: #f4f4f4;
+  background: #fdfcfb;
 }
