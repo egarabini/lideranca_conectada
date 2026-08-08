@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liderança Conectada 360 Graus | Transforme sua Liderança</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/lp.css">
+</head>
+<body>
+
+    <nav class="fixed top-0 w-full h-[60px] bg-white/95 border-b border-gray-100 z-50 flex items-center px-6 justify-between">
+        <img src="/static/images/lideranca_conectada.png" alt="Liderança Conectada 360" class="h-10 w-auto object-contain">
+    </nav>
+
+    <section class="lp-hero pt-[60px]">
+        <div class="lp-hero-content">
+            <div class="lp-hero-text">
+                <span class="lp-tag">Liderança Conectada 360 Graus</span>
+                <h1 class="serif">Decisões melhores sobre pessoas constroem <span class="text-[#D4A017]">organizações mais fortes.</span></h1>
+                <p class="lp-subtitle">Ajudamos empresas a qualificar decisões sobre pessoas, fortalecendo a coerência entre liderança, cultura, estratégia e resultados.</p>
+                <ul class="lp-benefits">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#D4A017" opacity="0.15"/><path d="M6 10l3 3 5-6" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Compreender os fatores que limitam a capacidade organizacional
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#D4A017" opacity="0.15"/><path d="M6 10l3 3 5-6" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Qualificar decisões estratégicas sobre pessoas
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#D4A017" opacity="0.15"/><path d="M6 10l3 3 5-6" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Construir coerência entre liderança, cultura e estratégia
+                    </li>
+                </ul>
+            </div>
+            <div class="lp-form-wrapper">
+                <div class="lp-form-card">
+                    <h2 class="serif">É o primeiro passo para <span class="text-[#D4A017]">decisões mais conscientes</span></h2>
+                    <form id="lp-form" novalidate>
+                        <div class="lp-field">
+                            <label for="nome">Nome completo *</label>
+                            <input type="text" id="nome" name="nome" required placeholder="Seu nome completo">
+                        </div>
+                        <div class="lp-field">
+                            <label for="email">E-mail *</label>
+                            <input type="email" id="email" name="email" required placeholder="seu@email.com">
+                        </div>
+                        <div class="lp-field">
+                            <label for="whatsapp">WhatsApp *</label>
+                            <input type="tel" id="whatsapp" name="whatsapp" required placeholder="(XX) XXXXX-XXXX">
+                        </div>
+                        <div class="lp-field">
+                            <label for="empresa">Empresa *</label>
+                            <input type="text" id="empresa" name="empresa" required placeholder="Nome da empresa">
+                        </div>
+                        <div class="lp-field">
+                            <label for="cargo">Cargo / Função *</label>
+                            <input type="text" id="cargo" name="cargo" required placeholder="Seu cargo ou função">
+                        </div>
+                        <div class="lp-field">
+                            <label for="colaboradores">Número de colaboradores *</label>
+                            <select id="colaboradores" name="colaboradores" required>
+                                <option value="">Selecione uma faixa</option>
+                                <option value="ate10">Até 10 colaboradores</option>
+                                <option value="11a30">11 a 30 colaboradores</option>
+                                <option value="31a50">31 a 50 colaboradores</option>
+                                <option value="51a100">51 a 100 colaboradores</option>
+                                <option value="101a300">101 a 300 colaboradores</option>
+                                <option value="301a700">301 a 700 colaboradores</option>
+                                <option value="acima700">Acima de 700 colaboradores</option>
+                            </select>
+                        </div>
+                        <div class="lp-field">
+                            <label for="cidade_uf">Cidade / UF</label>
+                            <input type="text" id="cidade_uf" name="cidade_uf" placeholder="Ex: São Paulo / SP">
+                        </div>
+                        <button type="submit" id="lp-submit" class="lp-cta-button">
+                            Quero agendar uma conversa
+                        </button>
+                        <p class="lp-disclaimer">Seus dados estão seguros e não serão compartilhados.</p>
+                    </form>
+                    <div id="lp-success" class="lp-success hidden">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="24" fill="#D4A017" opacity="0.15"/><path d="M16 24l6 6 10-12" stroke="#D4A017" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <h3 class="serif">Recebemos seus dados!</h3>
+                        <p>Nossa equipe entrará em contato em breve para agendar sua conversa estratégica.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="lp-stats">
+        <div class="lp-stats-inner">
+            <p class="lp-stats-tag">O Impacto das Decisões</p>
+            <h2 class="serif">Toda decisão sobre pessoas produz efeitos na organização.</h2>
+            <div class="lp-stats-grid">
+                <div class="lp-stat-item">
+                    <div class="lp-stat-title">Liderança</div>
+                    <div class="lp-stat-subtitle">Decisões mais conscientes</div>
+                    <p class="lp-stat-label">Fortalecem a capacidade das lideranças de responder à realidade com mais clareza e coerência.</p>
+                </div>
+                <div class="lp-stat-item">
+                    <div class="lp-stat-title">Cultura</div>
+                    <div class="lp-stat-subtitle">Relações mais coerentes</div>
+                    <p class="lp-stat-label">Aproximam práticas, comportamentos e decisões da cultura que a organização deseja construir.</p>
+                </div>
+                <div class="lp-stat-item">
+                    <div class="lp-stat-title">Estratégia</div>
+                    <div class="lp-stat-subtitle">Resultados mais sustentáveis</div>
+                    <p class="lp-stat-label">Criam melhores condições para transformar estratégia em capacidade real de execução.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="lp-method">
+        <div class="lp-method-inner">
+            <h2 class="serif">Metodologia 360 Graus</h2>
+            <div class="lp-method-grid">
+                <div class="lp-method-card">
+                    <span class="lp-method-tag">Fase 01</span>
+                    <h3 class="serif">Diagnóstico</h3>
+                    <p>Escuta, dados e leitura comportamental e cultural para compreender o cenário real.</p>
+                </div>
+                <div class="lp-method-card">
+                    <span class="lp-method-tag">Fase 02</span>
+                    <h3 class="serif">Intervenção</h3>
+                    <p>Ações práticas para desenvolver liderança, comunicação e relações de trabalho.</p>
+                </div>
+                <div class="lp-method-card">
+                    <span class="lp-method-tag">Fase 03</span>
+                    <h3 class="serif">Continuidade</h3>
+                    <p>Acompanhamento, indicadores e governança para sustentar a evolução.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="lp-specialists">
+        <div class="lp-specialists-inner">
+            <h2 class="serif">Nossas Especialistas</h2>
+            <div class="lp-specialists-grid">
+                <div class="lp-specialist">
+                    <div class="lp-specialist-photo">
+                        <img src="/static/images/Renata.png" alt="Renata Gioia">
+                    </div>
+                    <h3 class="serif">Renata Gioia</h3>
+                    <p>Especialista em cultura organizacional, visão sistêmica e arquitetura relacional.</p>
+                    <div class="lp-social-links">
+                        <a href="https://www.instagram.com/SEU_USUARIO_RENATA" target="_blank" rel="noopener" title="Instagram">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.linkedin.com/in/SEU_USUARIO_RENATA" target="_blank" rel="noopener" title="LinkedIn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="lp-specialist">
+                    <div class="lp-specialist-photo">
+                        <img src="/static/images/Monica.png" alt="Monica Motta">
+                    </div>
+                    <h3 class="serif">Monica Motta</h3>
+                    <p>Especialista comportamental em ciência aplicada à estratégia e decisão.</p>
+                    <div class="lp-social-links">
+                        <a href="https://www.instagram.com/SEU_USUARIO_MONICA" target="_blank" rel="noopener" title="Instagram">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.linkedin.com/in/SEU_USUARIO_MONICA" target="_blank" rel="noopener" title="LinkedIn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="lp-footer">
+        <img src="/static/images/lideranca_conectada.png" alt="Logo" class="lp-footer-logo">
+        <p class="serif">Integração que impulsiona performance e sustenta resultados.</p>
+        <div class="lp-footer-social">
+            <a href="https://www.instagram.com/liderancaconectada" target="_blank" rel="noopener" title="Instagram">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+                </svg>
+            </a>
+            <a href="https://www.linkedin.com/company/liderancaconectada" target="_blank" rel="noopener" title="LinkedIn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
+                </svg>
+            </a>
+            <a href="https://wa.me/55XXXXXXXXXXX" target="_blank" rel="noopener" title="WhatsApp">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+                </svg>
+            </a>
+            <a href="mailto:contato@liderancaconectada.com.br" title="Email">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                </svg>
+            </a>
+        </div>
+        <div class="lp-footer-contact">
+            <span>contato@liderancaconectada.com.br</span>
+            <span>São Paulo | Vitória</span>
+        </div>
+    </footer>
+
+    <script src="/static/js/lp.js"></script>
+</body>
+</html>
