@@ -386,6 +386,28 @@ body.admin-body {
 
 .admin-login-back:hover { color: var(--burgundy); }
 
+/* ===== CHARTS ===== */
+.admin-charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.admin-chart-wide {
+    grid-column: 1 / -1;
+}
+
+.admin-chart-body {
+    padding: 20px;
+    height: 260px;
+    position: relative;
+}
+
+.admin-chart-wide .admin-chart-body {
+    height: 300px;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     .admin-sidebar {

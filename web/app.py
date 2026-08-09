@@ -4,12 +4,14 @@ import psycopg
 from flask import Flask, jsonify, render_template, request
 
 from admin import admin_bp
+from avaliacao import avaliacao_bp
 from db import execute, get_db_connection, init_db, query
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = os.getenv("SECRET_KEY", "lideranca-conectada-dev-secret")
 
 app.register_blueprint(admin_bp)
+app.register_blueprint(avaliacao_bp)
 
 init_db()
 

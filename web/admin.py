@@ -70,6 +70,24 @@ def dashboard():
         "SELECT id, nome, empresa, cargo, status, created_at FROM leads ORDER BY created_at DESC LIMIT 8"
     ) or []
 
+    # Dados para gráficos
+    leads_por_mes = query(
+        """SELECT TO_CHAR(created_at, 'YYYY-MM') AS mes, COUNT(*) AS total
+           FROM leads GROUP BY mes ORDER BY mes"""
+    ) or []
+
+    leads_por_status = query(
+        "SELECT status, COUNT(*) AS total FROM leads GROUP BY status"
+    ) or []
+
+    avaliacoes_por_palestra = query(
+        """SELECT p.titulo, ROUND(AVG(a.nota_geral), 1) AS media, COUNT(a.id) AS total
+           FROM avaliacoes a
+           JOIN palestras_organizacoes po ON po.id = a.palestra_organizacao_id
+           JOIN palestras p ON p.id = po.palestra_id
+           GROUP BY p.titulo ORDER BY media DESC"""
+    ) or []
+
     return render_template(
         "admin/dashboard.html",
         total_leads=total_leads,
@@ -79,6 +97,9 @@ def dashboard():
         total_palestras=total_palestras,
         total_avaliacoes=total_avaliacoes,
         leads_recentes=leads_recentes,
+        leads_por_mes=leads_por_mes,
+        leads_por_status=leads_por_status,
+        avaliacoes_por_palestra=avaliacoes_por_palestra,
     )
 
 
@@ -187,7 +208,21 @@ def organizacao_delete(org_id):
 @login_required
 def palestras():
     rows = query("SELECT * FROM palestras ORDER BY data_realizacao DESC NULLS LAST") or []
-    return render_template("admin/palestras.html", palestras=rows)
+    vinculos = query(
+        """SELECT po.id, po.palestra_id, po.organizacao_id, po.data_realizacao,
+                  p.titulo AS palestra_titulo, o.nome AS organizacao_nome
+           FROM palestras_organizacoes po
+           LEFT JOIN palestras p ON p.id = po.palestra_id
+           LEFT JOIN organizacoes o ON o.id = po.organizacao_id
+           ORDER BY po.palestra_id"""
+    ) or []
+    organizacoes = query("SELECT id, nome FROM organizacoes ORDER BY nome") or []
+    return render_template(
+        "admin/palestras.html",
+        palestras=rows,
+        vinculos=vinculos,
+        organizacoes=organizacoes,
+    )
 
 
 @admin_bp.route("/palestras/nova", methods=["GET", "POST"])
@@ -244,6 +279,32 @@ def palestra_editar(palestra_id):
 def palestra_delete(palestra_id):
     execute("DELETE FROM palestras WHERE id = %s", (palestra_id,))
     flash("Palestra removida.", "success")
+    return redirect(url_for("admin.palestras"))
+
+
+@admin_bp.route("/palestras/<int:palestra_id>/vincular", methods=["POST"])
+@login_required
+def palestra_vincular(palestra_id):
+    organizacao_id = request.form.get("organizacao_id", type=int)
+    data_realizacao = request.form.get("data_realizacao") or None
+    if organizacao_id:
+        try:
+            execute(
+                """INSERT INTO palestras_organizacoes (palestra_id, organizacao_id, data_realizacao)
+                   VALUES (%s, %s, %s)""",
+                (palestra_id, organizacao_id, data_realizacao),
+            )
+            flash("Organização vinculada à palestra.", "success")
+        except Exception:
+            flash("Este vínculo já existe.", "error")
+    return redirect(url_for("admin.palestras"))
+
+
+@admin_bp.route("/vinculos/<int:vinculo_id>/delete", methods=["POST"])
+@login_required
+def vinculo_delete(vinculo_id):
+    execute("DELETE FROM palestras_organizacoes WHERE id = %s", (vinculo_id,))
+    flash("Vínculo removido.", "success")
     return redirect(url_for("admin.palestras"))
 
 
