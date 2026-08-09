@@ -1,0 +1,29 @@
+{% extends "admin/base.html" %}
+{% block title %}Trocar Senha{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Trocar Senha</h1>
+    </div>
+    <div class="admin-panel admin-panel-narrow">
+        <form method="POST" class="admin-form">
+            <div class="admin-field">
+                <label for="senha_atual">Senha atual *</label>
+                <input type="password" id="senha_atual" name="senha_atual" required>
+            </div>
+            <div class="admin-field">
+                <label for="nova_senha">Nova senha *</label>
+                <input type="password" id="nova_senha" name="nova_senha" required>
+            </div>
+            <div class="admin-field">
+                <label for="confirmar_senha">Confirmar nova senha *</label>
+                <input type="password" id="confirmar_senha" name="confirmar_senha" required>
+            </div>
+            <div class="admin-form-actions">
+                <a href="{{ url_for('admin.dashboard') }}" class="admin-btn admin-btn-ghost">Cancelar</a>
+                <button type="submit" class="admin-btn admin-btn-primary">Alterar Senha</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

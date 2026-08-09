@@ -1,8 +1,11 @@
+import csv
 import functools
+import io
 import os
 
 from flask import (
     Blueprint,
+    Response,
     flash,
     redirect,
     render_template,
@@ -110,12 +113,26 @@ def leads():
     status = request.args.get("status", "")
     if status:
         rows = query(
-            "SELECT * FROM leads WHERE status = %s ORDER BY created_at DESC", (status,)
+            """SELECT l.*, o.nome AS organizacao_nome
+               FROM leads l
+               LEFT JOIN organizacoes o ON o.id = l.organizacao_id
+               WHERE l.status = %s ORDER BY l.created_at DESC""",
+            (status,),
         ) or []
     else:
-        rows = query("SELECT * FROM leads ORDER BY created_at DESC") or []
+        rows = query(
+            """SELECT l.*, o.nome AS organizacao_nome
+               FROM leads l
+               LEFT JOIN organizacoes o ON o.id = l.organizacao_id
+               ORDER BY l.created_at DESC"""
+        ) or []
+    organizacoes = query("SELECT id, nome FROM organizacoes ORDER BY nome") or []
     return render_template(
-        "admin/leads.html", leads=rows, status=status, lead_status=LEAD_STATUS
+        "admin/leads.html",
+        leads=rows,
+        status=status,
+        lead_status=LEAD_STATUS,
+        organizacoes=organizacoes,
     )
 
 
@@ -138,6 +155,52 @@ def lead_delete(lead_id):
     execute("DELETE FROM leads WHERE id = %s", (lead_id,))
     flash("Lead removido.", "success")
     return redirect(url_for("admin.leads"))
+
+
+@admin_bp.route("/leads/<int:lead_id>/vincular", methods=["POST"])
+@login_required
+def lead_vincular(lead_id):
+    organizacao_id = request.form.get("organizacao_id", type=int)
+    if organizacao_id:
+        execute(
+            "UPDATE leads SET organizacao_id = %s, updated_at = NOW() WHERE id = %s",
+            (organizacao_id, lead_id),
+        )
+        flash("Lead vinculado à organização.", "success")
+    return redirect(request.referrer or url_for("admin.leads"))
+
+
+@admin_bp.route("/leads/exportar")
+@login_required
+def leads_exportar():
+    status = request.args.get("status", "")
+    if status:
+        rows = query(
+            "SELECT * FROM leads WHERE status = %s ORDER BY created_at DESC", (status,)
+        ) or []
+    else:
+        rows = query("SELECT * FROM leads ORDER BY created_at DESC") or []
+
+    output = io.StringIO()
+    writer = csv.writer(output, delimiter=";")
+    writer.writerow(["ID", "Nome", "E-mail", "WhatsApp", "Empresa", "Cargo",
+                     "Colaboradores", "Cidade/UF", "Status", "Data"])
+    for r in rows:
+        writer.writerow([
+            r["id"], r["nome"], r["email"], r["whatsapp"], r["empresa"],
+            r["cargo"], r["colaboradores"], r["cidade_uf"] or "",
+            r["status"], r["created_at"].strftime("%d/%m/%Y %H:%M") if r["created_at"] else "",
+        ])
+
+    filename = "leads.csv"
+    if status:
+        filename = f"leads_{status}.csv"
+
+    return Response(
+        "\ufeff" + output.getvalue(),
+        mimetype="text/csv",
+        headers={"Content-Disposition": f"attachment; filename={filename}"},
+    )
 
 
 # ---------------- ORGANIZAÇÕES ----------------
@@ -363,3 +426,29 @@ def usuario_delete(usuario_id):
         execute("DELETE FROM usuarios WHERE id = %s", (usuario_id,))
         flash("Usuário removido.", "success")
     return redirect(url_for("admin.usuarios"))
+
+
+@admin_bp.route("/trocar-senha", methods=["GET", "POST"])
+@login_required
+def trocar_senha():
+    user_id = session.get("admin_user_id")
+    if request.method == "POST":
+        senha_atual = request.form.get("senha_atual", "")
+        nova_senha = request.form.get("nova_senha", "")
+        confirmar = request.form.get("confirmar_senha", "")
+
+        user = query("SELECT * FROM usuarios WHERE id = %s", (user_id,), one=True)
+        if not user or not check_password_hash(user["senha_hash"], senha_atual):
+            flash("Senha atual incorreta.", "error")
+        elif len(nova_senha) < 6:
+            flash("A nova senha deve ter pelo menos 6 caracteres.", "error")
+        elif nova_senha != confirmar:
+            flash("A confirmação não confere com a nova senha.", "error")
+        else:
+            execute(
+                "UPDATE usuarios SET senha_hash = %s WHERE id = %s",
+                (generate_password_hash(nova_senha), user_id),
+            )
+            flash("Senha alterada com sucesso.", "success")
+            return redirect(url_for("admin.dashboard"))
+    return render_template("admin/trocar_senha.html")

@@ -12,6 +12,7 @@
         {% for s in lead_status %}
         <a href="{{ url_for('admin.leads', status=s) }}" class="admin-filter-chip {{ 'admin-filter-chip-active' if status == s }}">{{ s }}</a>
         {% endfor %}
+        <a href="{{ url_for('admin.leads_exportar', status=status) }}" class="admin-btn admin-btn-sm" style="margin-left:auto;">Exportar CSV</a>
     </div>
 
     <div class="admin-panel">
@@ -24,7 +25,7 @@
                     <th>Empresa</th>
                     <th>Cargo</th>
                     <th>Colaboradores</th>
-                    <th>Cidade/UF</th>
+                    <th>Organização</th>
                     <th>Status</th>
                     <th>Data</th>
                     <th>Ações</th>
@@ -39,7 +40,20 @@
                     <td>{{ lead.empresa }}</td>
                     <td>{{ lead.cargo }}</td>
                     <td>{{ lead.colaboradores }}</td>
-                    <td>{{ lead.cidade_uf or '' }}</td>
+                    <td>
+                        {% if lead.organizacao_nome %}
+                            <span class="admin-badge admin-badge-convertido">{{ lead.organizacao_nome }}</span>
+                        {% else %}
+                            <form method="POST" action="{{ url_for('admin.lead_vincular', lead_id=lead.id) }}" class="admin-inline-form">
+                                <select name="organizacao_id" onchange="this.form.submit()" class="admin-select-sm">
+                                    <option value="">Vincular...</option>
+                                    {% for o in organizacoes %}
+                                    <option value="{{ o.id }}">{{ o.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                        {% endif %}
+                    </td>
                     <td>
                         <form method="POST" action="{{ url_for('admin.lead_status', lead_id=lead.id) }}" class="admin-inline-form">
                             <select name="status" onchange="this.form.submit()" class="admin-select-sm">

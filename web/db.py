@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS leads (
     cidade_uf       VARCHAR(255),
     status          VARCHAR(30) DEFAULT 'novo',
     source          VARCHAR(100) DEFAULT 'lp',
+    organizacao_id  INTEGER REFERENCES organizacoes(id) ON DELETE SET NULL,
     created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -102,6 +103,11 @@ def get_db_connection():
     return psycopg.connect(database_url, connect_timeout=5)
 
 
+MIGRATIONS = [
+    "ALTER TABLE leads ADD COLUMN IF NOT EXISTS organizacao_id INTEGER REFERENCES organizacoes(id) ON DELETE SET NULL",
+]
+
+
 def init_db():
     try:
         conn = get_db_connection()
@@ -112,6 +118,8 @@ def init_db():
             with conn.cursor() as cursor:
                 for stmt in statements:
                     cursor.execute(stmt)
+                for mig in MIGRATIONS:
+                    cursor.execute(mig)
         conn.close()
     except Exception:
         pass
