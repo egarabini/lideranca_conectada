@@ -107,9 +107,11 @@ def init_db():
         conn = get_db_connection()
         if conn is None:
             return
+        statements = [s.strip() for s in SCHEMA_SQL.split(";") if s.strip()]
         with conn:
             with conn.cursor() as cursor:
-                cursor.execute(SCHEMA_SQL)
+                for stmt in statements:
+                    cursor.execute(stmt)
         conn.close()
     except Exception:
         pass
