@@ -3,43 +3,13 @@ import os
 import psycopg
 from flask import Flask, jsonify, render_template, request
 
+from admin import admin_bp
+from db import execute, get_db_connection, init_db, query
+
 app = Flask(__name__, static_folder='static')
+app.secret_key = os.getenv("SECRET_KEY", "lideranca-conectada-dev-secret")
 
-LEADS_TABLE_SQL = """
-CREATE TABLE IF NOT EXISTS leads (
-    id SERIAL PRIMARY KEY,
-    nome VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    whatsapp VARCHAR(20) NOT NULL,
-    empresa VARCHAR(255) NOT NULL,
-    cargo VARCHAR(255) NOT NULL,
-    colaboradores VARCHAR(50) NOT NULL,
-    cidade_uf VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    source VARCHAR(100) DEFAULT 'lp'
-);
-"""
-
-
-def get_db_connection():
-    database_url = os.getenv("DATABASE_URL")
-    if not database_url:
-        return None
-    return psycopg.connect(database_url, connect_timeout=5)
-
-
-def init_db():
-    try:
-        conn = get_db_connection()
-        if conn is None:
-            return
-        with conn:
-            with conn.cursor() as cursor:
-                cursor.execute(LEADS_TABLE_SQL)
-        conn.close()
-    except Exception:
-        pass
-
+app.register_blueprint(admin_bp)
 
 init_db()
 

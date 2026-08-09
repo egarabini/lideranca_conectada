@@ -1,0 +1,47 @@
+{% extends "admin/base.html" %}
+{% block title %}Palestras{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-page-header">
+        <div>
+            <h1 class="admin-page-title">Palestras</h1>
+            <p class="admin-page-subtitle">Eventos e palestras realizadas</p>
+        </div>
+        <a href="{{ url_for('admin.palestra_nova') }}" class="admin-btn admin-btn-primary">+ Nova Palestra</a>
+    </div>
+
+    <div class="admin-panel">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Data</th>
+                    <th>Local</th>
+                    <th>Modalidade</th>
+                    <th>Carga (min)</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in palestras %}
+                <tr>
+                    <td>{{ p.titulo }}</td>
+                    <td>{{ p.data_realizacao.strftime('%d/%m/%Y') if p.data_realizacao else '' }}</td>
+                    <td>{{ p.local or '' }}</td>
+                    <td>{{ p.modalidade }}</td>
+                    <td>{{ p.carga_horaria or '' }}</td>
+                    <td class="admin-actions">
+                        <a href="{{ url_for('admin.palestra_editar', palestra_id=p.id) }}" class="admin-btn admin-btn-sm">Editar</a>
+                        <form method="POST" action="{{ url_for('admin.palestra_delete', palestra_id=p.id) }}" onsubmit="return confirm('Remover esta palestra?')">
+                            <button type="submit" class="admin-btn admin-btn-danger admin-btn-sm">Remover</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" class="admin-empty">Nenhuma palestra cadastrada.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

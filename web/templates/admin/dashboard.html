@@ -1,0 +1,68 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Dashboard</h1>
+        <p class="admin-page-subtitle">Visão geral da operação</p>
+    </div>
+
+    <div class="admin-cards">
+        <div class="admin-card">
+            <div class="admin-card-label">Total de Leads</div>
+            <div class="admin-card-value">{{ total_leads }}</div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-label">Leads Novos</div>
+            <div class="admin-card-value">{{ leads_novos }}</div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-label">Leads Convertidos</div>
+            <div class="admin-card-value">{{ leads_convertidos }}</div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-label">Organizações</div>
+            <div class="admin-card-value">{{ total_organizacoes }}</div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-label">Palestras</div>
+            <div class="admin-card-value">{{ total_palestras }}</div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-label">Avaliações</div>
+            <div class="admin-card-value">{{ total_avaliacoes }}</div>
+        </div>
+    </div>
+
+    <div class="admin-panel">
+        <div class="admin-panel-header">
+            <h2 class="admin-panel-title">Leads Recentes</h2>
+            <a href="{{ url_for('admin.leads') }}" class="admin-btn admin-btn-ghost">Ver todos</a>
+        </div>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Empresa</th>
+                    <th>Cargo</th>
+                    <th>Status</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lead in leads_recentes %}
+                <tr>
+                    <td>{{ lead.nome }}</td>
+                    <td>{{ lead.empresa }}</td>
+                    <td>{{ lead.cargo }}</td>
+                    <td><span class="admin-badge admin-badge-{{ lead.status }}">{{ lead.status }}</span></td>
+                    <td>{{ lead.created_at.strftime('%d/%m/%Y') if lead.created_at else '' }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="admin-empty">Nenhum lead ainda.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

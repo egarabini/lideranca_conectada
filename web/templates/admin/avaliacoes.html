@@ -1,0 +1,43 @@
+{% extends "admin/base.html" %}
+{% block title %}Avaliações{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Avaliações</h1>
+        <p class="admin-page-subtitle">Formulários pós-palestra</p>
+    </div>
+
+    <div class="admin-panel">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Palestra</th>
+                    <th>Organização</th>
+                    <th>Respondente</th>
+                    <th>Geral</th>
+                    <th>Conteúdo</th>
+                    <th>Aplicabilidade</th>
+                    <th>Facilitador</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in avaliacoes %}
+                <tr>
+                    <td>{{ a.palestra_titulo or '' }}</td>
+                    <td>{{ a.organizacao_nome or '' }}</td>
+                    <td>{{ a.nome_respondente or '' }}</td>
+                    <td>{{ a.nota_geral or '-' }}</td>
+                    <td>{{ a.nota_conteudo or '-' }}</td>
+                    <td>{{ a.nota_aplicabilidade or '-' }}</td>
+                    <td>{{ a.nota_facilitador or '-' }}</td>
+                    <td>{{ a.criado_em.strftime('%d/%m/%Y') if a.criado_em else '' }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="8" class="admin-empty">Nenhuma avaliação registrada.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

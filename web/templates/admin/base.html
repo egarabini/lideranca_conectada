@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin{% endblock %} | Liderança Conectada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/admin.css">
+</head>
+<body class="admin-body">
+    <div class="admin-shell">
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-brand">
+                <img src="/static/images/lideranca_conectada.png" alt="Liderança Conectada" class="h-9 w-auto object-contain">
+            </div>
+            <nav class="admin-nav">
+                <a href="{{ url_for('admin.dashboard') }}" class="admin-nav-link">Dashboard</a>
+                <a href="{{ url_for('admin.leads') }}" class="admin-nav-link">Leads</a>
+                <a href="{{ url_for('admin.organizacoes') }}" class="admin-nav-link">Organizações</a>
+                <a href="{{ url_for('admin.palestras') }}" class="admin-nav-link">Palestras</a>
+                <a href="{{ url_for('admin.avaliacoes') }}" class="admin-nav-link">Avaliações</a>
+                <a href="{{ url_for('admin.usuarios') }}" class="admin-nav-link">Usuários</a>
+            </nav>
+            <div class="admin-sidebar-footer">
+                <div class="admin-user">
+                    <span class="admin-user-name">{{ session.get('admin_user_nome', '') }}</span>
+                    <span class="admin-user-email">{{ session.get('admin_user_email', '') }}</span>
+                </div>
+                <a href="{{ url_for('admin.logout') }}" class="admin-logout">Sair</a>
+            </div>
+        </aside>
+        <main class="admin-main">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="admin-flashes">
+                        {% for category, message in messages %}
+                            <div class="admin-flash admin-flash-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

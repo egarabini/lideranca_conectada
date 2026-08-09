@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ 'Editar' if org else 'Nova' }} Organização{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">{{ 'Editar' if org else 'Nova' }} Organização</h1>
+    </div>
+    <div class="admin-panel admin-panel-narrow">
+        <form method="POST" class="admin-form">
+            <div class="admin-field">
+                <label for="nome">Nome *</label>
+                <input type="text" id="nome" name="nome" required value="{{ org.nome if org else '' }}">
+            </div>
+            <div class="admin-field">
+                <label for="cnpj">CNPJ</label>
+                <input type="text" id="cnpj" name="cnpj" value="{{ org.cnpj if org else '' }}">
+            </div>
+            <div class="admin-field">
+                <label for="segmento">Segmento</label>
+                <input type="text" id="segmento" name="segmento" value="{{ org.segmento if org else '' }}">
+            </div>
+            <div class="admin-field">
+                <label for="contato_nome">Nome do contato</label>
+                <input type="text" id="contato_nome" name="contato_nome" value="{{ org.contato_nome if org else '' }}">
+            </div>
+            <div class="admin-field">
+                <label for="contato_email">E-mail do contato</label>
+                <input type="email" id="contato_email" name="contato_email" value="{{ org.contato_email if org else '' }}">
+            </div>
+            <div class="admin-field">
+                <label for="contato_telefone">Telefone do contato</label>
+                <input type="text" id="contato_telefone" name="contato_telefone" value="{{ org.contato_telefone if org else '' }}">
+            </div>
+            <div class="admin-form-actions">
+                <a href="{{ url_for('admin.organizacoes') }}" class="admin-btn admin-btn-ghost">Cancelar</a>
+                <button type="submit" class="admin-btn admin-btn-primary">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

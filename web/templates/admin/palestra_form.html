@@ -1,0 +1,45 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ 'Editar' if palestra else 'Nova' }} Palestra{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">{{ 'Editar' if palestra else 'Nova' }} Palestra</h1>
+    </div>
+    <div class="admin-panel admin-panel-narrow">
+        <form method="POST" class="admin-form">
+            <div class="admin-field">
+                <label for="titulo">Título *</label>
+                <input type="text" id="titulo" name="titulo" required value="{{ palestra.titulo if palestra else '' }}">
+            </div>
+            <div class="admin-field">
+                <label for="descricao">Descrição</label>
+                <textarea id="descricao" name="descricao" rows="4">{{ palestra.descricao if palestra else '' }}</textarea>
+            </div>
+            <div class="admin-field">
+                <label for="data_realizacao">Data de realização</label>
+                <input type="date" id="data_realizacao" name="data_realizacao" value="{{ palestra.data_realizacao if palestra and palestra.data_realizacao else '' }}">
+            </div>
+            <div class="admin-field">
+                <label for="local">Local</label>
+                <input type="text" id="local" name="local" value="{{ palestra.local if palestra else '' }}">
+            </div>
+            <div class="admin-field">
+                <label for="modalidade">Modalidade</label>
+                <select id="modalidade" name="modalidade">
+                    <option value="presencial" {{ 'selected' if palestra and palestra.modalidade == 'presencial' }}>Presencial</option>
+                    <option value="online" {{ 'selected' if palestra and palestra.modalidade == 'online' }}>Online</option>
+                    <option value="hibrido" {{ 'selected' if palestra and palestra.modalidade == 'hibrido' }}>Híbrido</option>
+                </select>
+            </div>
+            <div class="admin-field">
+                <label for="carga_horaria">Carga horária (minutos)</label>
+                <input type="number" id="carga_horaria" name="carga_horaria" value="{{ palestra.carga_horaria if palestra else '' }}">
+            </div>
+            <div class="admin-form-actions">
+                <a href="{{ url_for('admin.palestras') }}" class="admin-btn admin-btn-ghost">Cancelar</a>
+                <button type="submit" class="admin-btn admin-btn-primary">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
