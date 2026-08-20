@@ -35,11 +35,98 @@
                 <label for="carga_horaria">Carga horária (minutos)</label>
                 <input type="number" id="carga_horaria" name="carga_horaria" value="{{ palestra.carga_horaria if palestra else '' }}">
             </div>
+            <div class="admin-field">
+                <label for="formulario_investigacao_id">Formulário de Investigação</label>
+                <select id="formulario_investigacao_id" name="formulario_investigacao_id">
+                    <option value="">Nenhum</option>
+                    {% for f in formularios_investigacao %}
+                    <option value="{{ f.id }}" {{ 'selected' if palestra and palestra.formulario_investigacao_id == f.id }}>{{ f.titulo }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="admin-field">
+                <label for="formulario_avaliacao_id">Formulário de Avaliação</label>
+                <select id="formulario_avaliacao_id" name="formulario_avaliacao_id">
+                    <option value="">Nenhum</option>
+                    {% for f in formularios_avaliacao %}
+                    <option value="{{ f.id }}" {{ 'selected' if palestra and palestra.formulario_avaliacao_id == f.id }}>{{ f.titulo }}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <div class="admin-form-actions">
                 <a href="{{ url_for('admin.palestras') }}" class="admin-btn admin-btn-ghost">Cancelar</a>
                 <button type="submit" class="admin-btn admin-btn-primary">Salvar</button>
             </div>
         </form>
     </div>
+
+    {% if palestra %}
+    <!-- Organizações onde a Palestra foi Realizada -->
+    <div class="admin-panel" style="margin-top: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.25rem; font-weight: 600; color: #5C2A2A;">Organizações onde a palestra foi realizada</h2>
+            <button type="button" onclick="document.getElementById('adicionar-organizacao-form').style.display = 'block'" class="admin-btn admin-btn-primary" style="font-size: 0.875rem; padding: 0.5rem 1rem;">
+                + Adicionar Organização
+            </button>
+        </div>
+
+        {% if organizacoes_realizadas %}
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Organização</th>
+                    <th>Data Realização</th>
+                    <th>Observações</th>
+                    <th style="text-align: right;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for org in organizacoes_realizadas %}
+                <tr>
+                    <td>{{ org.organizacao_nome }}</td>
+                    <td>{{ org.data_realizacao or '-' }}</td>
+                    <td>{{ org.observacoes or '-' }}</td>
+                    <td style="text-align: right;">
+                        <form method="POST" action="{{ url_for('admin.palestra_organizacao_remover', po_id=org.po_id) }}" style="display: inline;" onsubmit="return confirm('Remover esta organização da palestra?');">
+                            <button type="submit" class="admin-btn admin-btn-danger" style="font-size: 0.75rem; padding: 0.25rem 0.75rem;">Remover</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="color: #6B6B6B; font-style: italic; padding: 1rem 0;">Esta palestra ainda não foi realizada em nenhuma organização.</p>
+        {% endif %}
+
+        <!-- Formulário para Adicionar Organização -->
+        <div id="adicionar-organizacao-form" style="display: none; margin-top: 2rem; padding: 1.5rem; background: #F9F9F9; border-radius: 8px;">
+            <h3 style="font-size: 1rem; font-weight: 600; color: #5C2A2A; margin-bottom: 1rem;">Adicionar Organização</h3>
+            <form method="POST" action="{{ url_for('admin.palestra_organizacao_adicionar', palestra_id=palestra.id) }}" class="admin-form">
+                <div class="admin-field">
+                    <label for="organizacao_id">Organização *</label>
+                    <select id="organizacao_id" name="organizacao_id" required style="width: 100%; padding: 0.625rem; border: 1px solid #E0E0E0; border-radius: 4px;">
+                        <option value="">Selecione uma organização...</option>
+                        {% for org in todas_organizacoes %}
+                        <option value="{{ org.id }}">{{ org.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="admin-field">
+                    <label for="data_realizacao">Data Realização</label>
+                    <input type="date" id="data_realizacao" name="data_realizacao" value="">
+                </div>
+                <div class="admin-field">
+                    <label for="observacoes">Observações</label>
+                    <textarea id="observacoes" name="observacoes" rows="3" style="width: 100%; padding: 0.625rem; border: 1px solid #E0E0E0; border-radius: 4px; resize: vertical;"></textarea>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button type="submit" class="admin-btn admin-btn-primary">Adicionar</button>
+                    <button type="button" onclick="document.getElementById('adicionar-organizacao-form').style.display = 'none'" class="admin-btn admin-btn-ghost">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

@@ -37,5 +37,74 @@
             </div>
         </form>
     </div>
+
+    {% if org %}
+    <!-- Palestras Realizadas na Organização -->
+    <div class="admin-panel" style="margin-top: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.25rem; font-weight: 600; color: #5C2A2A;">Palestras Realizadas</h2>
+            <button type="button" onclick="document.getElementById('adicionar-palestra-form').style.display = 'block'" class="admin-btn admin-btn-primary" style="font-size: 0.875rem; padding: 0.5rem 1rem;">
+                + Adicionar Palestra
+            </button>
+        </div>
+
+        {% if palestras_realizadas %}
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Palestra</th>
+                    <th>Data Realização</th>
+                    <th>Observações</th>
+                    <th style="text-align: right;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in palestras_realizadas %}
+                <tr>
+                    <td>{{ p.palestra_titulo }}</td>
+                    <td>{{ p.data_realizacao or '-' }}</td>
+                    <td>{{ p.observacoes or '-' }}</td>
+                    <td style="text-align: right;">
+                        <form method="POST" action="{{ url_for('admin.organizacao_palestra_remover', po_id=p.po_id) }}" style="display: inline;" onsubmit="return confirm('Remover esta palestra da organização?');">
+                            <button type="submit" class="admin-btn admin-btn-danger" style="font-size: 0.75rem; padding: 0.25rem 0.75rem;">Remover</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="color: #6B6B6B; font-style: italic; padding: 1rem 0;">Nenhuma palestra realizada nesta organização.</p>
+        {% endif %}
+
+        <!-- Formulário para Adicionar Palestra -->
+        <div id="adicionar-palestra-form" style="display: none; margin-top: 2rem; padding: 1.5rem; background: #F9F9F9; border-radius: 8px;">
+            <h3 style="font-size: 1rem; font-weight: 600; color: #5C2A2A; margin-bottom: 1rem;">Adicionar Palestra</h3>
+            <form method="POST" action="{{ url_for('admin.organizacao_palestra_adicionar', org_id=org.id) }}" class="admin-form">
+                <div class="admin-field">
+                    <label for="palestra_id">Palestra *</label>
+                    <select id="palestra_id" name="palestra_id" required style="width: 100%; padding: 0.625rem; border: 1px solid #E0E0E0; border-radius: 4px;">
+                        <option value="">Selecione uma palestra...</option>
+                        {% for p in todas_palestras %}
+                        <option value="{{ p.id }}">{{ p.titulo }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="admin-field">
+                    <label for="data_realizacao">Data Realização</label>
+                    <input type="date" id="data_realizacao" name="data_realizacao" value="">
+                </div>
+                <div class="admin-field">
+                    <label for="observacoes">Observações</label>
+                    <textarea id="observacoes" name="observacoes" rows="3" style="width: 100%; padding: 0.625rem; border: 1px solid #E0E0E0; border-radius: 4px; resize: vertical;"></textarea>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button type="submit" class="admin-btn admin-btn-primary">Adicionar</button>
+                    <button type="button" onclick="document.getElementById('adicionar-palestra-form').style.display = 'none'" class="admin-btn admin-btn-ghost">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

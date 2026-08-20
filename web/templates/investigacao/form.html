@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ formulario.titulo }} | Liderança Conectada 360 Graus</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #FDFCFB; color: #4A4A4A; }
+        .serif { font-family: 'Playfair Display', serif; }
+        .bloco-titulo { font-family: 'Playfair Display', serif; color: #5C2A2A; }
+        .opcao { border: 1px solid #E5E0D8; border-radius: 8px; padding: 12px 14px; cursor: pointer; transition: all .15s; }
+        .opcao:hover { border-color: #D4A017; }
+        .opcao.selecionada { border-color: #5C2A2A; background: #5C2A2A0D; }
+        .opcao input { accent-color: #5C2A2A; }
+        .escala-btn { width: 40px; height: 40px; border-radius: 8px; border: 1px solid #E5E0D8; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; transition: all .15s; }
+        .escala-btn:hover { border-color: #D4A017; }
+        .escala-btn.selecionada { background: #5C2A2A; color: #fff; border-color: #5C2A2A; }
+    </style>
+</head>
+<body class="min-h-screen px-6 py-16">
+    <div class="w-full max-w-2xl mx-auto">
+        <div class="text-center mb-10">
+            <img src="/static/images/lideranca_conectada.png" alt="Liderança Conectada" class="h-12 w-auto object-contain mx-auto mb-6">
+            <h1 class="serif text-3xl text-[#5C2A2A] mb-2">{{ formulario.titulo }}</h1>
+            <p class="text-sm text-gray-500">{{ po.palestra_titulo }}</p>
+            <p class="text-xs text-gray-400">{{ po.organizacao_nome }}</p>
+        </div>
+
+        {% if formulario.descricao %}
+        <div class="bg-[#5C2A2A]/5 border border-[#D4A017]/30 rounded-lg p-6 mb-10 text-sm text-gray-600 leading-relaxed">
+            <p class="mb-0">{{ formulario.descricao }}</p>
+        </div>
+        {% endif %}
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-6 p-4 rounded-lg text-sm {{ 'bg-red-50 text-red-700' if category == 'error' else 'bg-green-50 text-green-700' }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" class="bg-white border border-[#D4A017]/30 p-8 md:p-10 shadow-lg">
+            <div class="grid md:grid-cols-2 gap-6 mb-10">
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-500 mb-2">Nome *</label>
+                    <input type="text" name="nome" required value="{{ dados.nome if dados else '' }}"
+                           class="w-full border-b border-gray-300 focus:border-[#D4A017] outline-none py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-500 mb-2">E-mail *</label>
+                    <input type="email" name="email" required value="{{ dados.email if dados else '' }}"
+                           class="w-full border-b border-gray-300 focus:border-[#D4A017] outline-none py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-500 mb-2">Cargo</label>
+                    <input type="text" name="cargo" value="{{ dados.cargo if dados else '' }}"
+                           class="w-full border-b border-gray-300 focus:border-[#D4A017] outline-none py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-500 mb-2">Departamento</label>
+                    <input type="text" name="departamento" value="{{ dados.departamento if dados else '' }}"
+                           class="w-full border-b border-gray-300 focus:border-[#D4A017] outline-none py-2 text-sm">
+                </div>
+            </div>
+
+            {% set ns = namespace(bloco_atual='') %}
+            {% for q in questoes %}
+                {% if q.bloco and q.bloco != ns.bloco_atual %}
+                    {% set ns.bloco_atual = q.bloco %}
+                    <div class="mb-10">
+                    <h2 class="bloco-titulo text-xl mb-1">{{ q.bloco }}</h2>
+                    <p class="text-xs text-gray-400 mb-6">Sobre a sua organização hoje</p>
+                {% endif %}
+
+                <div class="mb-8">
+                    <label class="block text-sm font-medium text-[#5C2A2A] mb-3">{{ loop.index }}. {{ q.pergunta }}{% if q.obrigatoria %} *{% endif %}</label>
+
+                    {% if q.tipo_resposta == 'radio' %}
+                        <div class="space-y-2">
+                            {% for op in q.opcoes.split('\n') %}
+                            <label class="opcao block">
+                                <input type="radio" name="q_{{ q.id }}" value="{{ op }}" class="mr-2" {{ 'checked' if dados and dados.get('q_' ~ q.id) == op }}>
+                                {{ op }}
+                            </label>
+                            {% endfor %}
+                            {% if q.tem_outro %}
+                            <label class="opcao block">
+                                <input type="radio" name="q_{{ q.id }}" value="Outro" class="mr-2" {{ 'checked' if dados and dados.get('q_' ~ q.id) == 'Outro' }}>
+                                Outro
+                            </label>
+                            {% endif %}
+                        </div>
+                        {% if q.tem_outro %}
+                        <div class="mt-3 hidden" id="outro_wrap_{{ q.id }}">
+                            <label class="block text-xs uppercase tracking-wider text-gray-500 mb-2">Especifique</label>
+                            <input type="text" name="q_{{ q.id }}_outro" value="{{ dados.get('q_' ~ q.id ~ '_outro') if dados else '' }}"
+                                   class="w-full border-b border-gray-300 focus:border-[#D4A017] outline-none py-2 text-sm">
+                        </div>
+                        {% endif %}
+
+                    {% elif q.tipo_resposta == 'checkbox' %}
+                        <div class="space-y-2">
+                            {% for op in q.opcoes.split('\n') %}
+                            <label class="opcao block">
+                                <input type="checkbox" name="q_{{ q.id }}" value="{{ op }}" class="mr-2" {{ 'checked' if dados and op in dados.getlist('q_' ~ q.id) }}>
+                                {{ op }}
+                            </label>
+                            {% endfor %}
+                            {% if q.tem_outro %}
+                            <label class="opcao block">
+                                <input type="checkbox" name="q_{{ q.id }}" value="Outro" class="mr-2" {{ 'checked' if dados and 'Outro' in dados.getlist('q_' ~ q.id) }}>
+                                Outro
+                            </label>
+                            {% endif %}
+                        </div>
+                        {% if q.tem_outro %}
+                        <div class="mt-3 hidden" id="outro_wrap_{{ q.id }}">
+                            <label class="block text-xs uppercase tracking-wider text-gray-500 mb-2">Especifique</label>
+                            <input type="text" name="q_{{ q.id }}_outro" value="{{ dados.get('q_' ~ q.id ~ '_outro') if dados else '' }}"
+                                   class="w-full border-b border-gray-300 focus:border-[#D4A017] outline-none py-2 text-sm">
+                        </div>
+                        {% endif %}
+
+                    {% elif q.tipo_resposta == 'escala' %}
+                        <p class="text-xs text-gray-400 mb-3">0 = Baixa prioridade &nbsp;·&nbsp; 10 = Prioridade máxima</p>
+                        <div class="flex flex-wrap gap-1.5" id="escala_{{ q.id }}">
+                            {% for i in range(0, 11) %}
+                            <div class="escala-btn" data-value="{{ i }}" data-q="{{ q.id }}">{{ i }}</div>
+                            {% endfor %}
+                        </div>
+                        <input type="hidden" name="q_{{ q.id }}" value="{{ dados.get('q_' ~ q.id) if dados else '' }}">
+
+                    {% else %}
+                        <textarea name="q_{{ q.id }}" rows="3" {% if q.obrigatoria %}required{% endif %} class="w-full border border-gray-200 focus:border-[#D4A017] outline-none p-3 text-sm">{{ dados.get('q_' ~ q.id) if dados else '' }}</textarea>
+                    {% endif %}
+                </div>
+
+                {% if q.bloco and (loop.last or questoes[loop.index0 + 1].bloco != q.bloco) %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <button type="submit" class="w-full py-3.5 bg-[#5C2A2A] text-white text-xs uppercase tracking-widest font-semibold hover:bg-[#D4A017] transition">
+                Enviar
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Seleção visual de opções
+        document.querySelectorAll('.opcao').forEach(function (l) {
+            var input = l.querySelector('input');
+            if (input && input.checked) l.classList.add('selecionada');
+            input.addEventListener('change', function () {
+                if (input.type === 'radio') {
+                    var name = input.name;
+                    document.querySelectorAll('input[name="' + name + '"]').forEach(function (i) {
+                        i.closest('.opcao').classList.toggle('selecionada', i.checked);
+                    });
+                } else {
+                    l.classList.toggle('selecionada', input.checked);
+                }
+            });
+        });
+
+        // Escalas 0-10
+        document.querySelectorAll('[id^="escala_"]').forEach(function (wrap) {
+            var qid = wrap.id.replace('escala_', '');
+            var hidden = document.querySelector('input[name="q_' + qid + '"]');
+            wrap.querySelectorAll('.escala-btn').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var val = btn.dataset.value;
+                    hidden.value = val;
+                    wrap.querySelectorAll('.escala-btn').forEach(function (b) {
+                        b.classList.toggle('selecionada', parseInt(b.dataset.value) <= parseInt(val));
+                    });
+                });
+            });
+            if (hidden.value) {
+                var v = parseInt(hidden.value);
+                wrap.querySelectorAll('.escala-btn').forEach(function (b) {
+                    b.classList.toggle('selecionada', parseInt(b.dataset.value) <= v);
+                });
+            }
+        });
+
+        // Campos "Outro"
+        document.querySelectorAll('input[value="Outro"]').forEach(function (input) {
+            var wrap = document.getElementById('outro_wrap_' + input.name.replace('q_', ''));
+            if (!wrap) return;
+            function toggle() {
+                var isOutro = input.checked;
+                wrap.classList.toggle('hidden', !isOutro);
+                if (isOutro) wrap.querySelector('input').focus();
+            }
+            input.addEventListener('change', toggle);
+            toggle();
+        });
+    </script>
+</body>
+</html>

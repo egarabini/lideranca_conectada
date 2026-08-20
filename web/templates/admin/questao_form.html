@@ -1,0 +1,68 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ 'Editar' if questao else 'Nova' }} Questão{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">{{ 'Editar Questão' if questao else 'Nova Questão' }}</h1>
+        <a href="{{ url_for('formularios.editar', fid=formulario.id) }}" class="admin-btn admin-btn-secondary">← Voltar</a>
+    </div>
+
+    <div class="admin-panel">
+        <form method="POST" class="admin-form">
+            <div class="admin-form-grid">
+                <div>
+                    <label class="admin-label">Ordem</label>
+                    <input type="number" name="ordem" value="{{ questao.ordem if questao else 0 }}" class="admin-input">
+                </div>
+                <div>
+                    <label class="admin-label">Bloco</label>
+                    <input type="text" name="bloco" value="{{ questao.bloco if questao else '' }}" class="admin-input" placeholder="Ex.: Bloco 1 — Compreendendo a Realidade">
+                </div>
+            </div>
+            <div>
+                <label class="admin-label">Pergunta *</label>
+                <textarea name="pergunta" rows="2" required class="admin-input">{{ questao.pergunta if questao else '' }}</textarea>
+            </div>
+            <div class="admin-form-grid">
+                <div>
+                    <label class="admin-label">Tipo de resposta</label>
+                    <select name="tipo_resposta" id="tipo_resposta" class="admin-input">
+                        {% for val, label in tipos_resposta %}
+                        <option value="{{ val }}" {{ 'selected' if questao and questao.tipo_resposta == val }}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="admin-label">Obrigatória</label>
+                    <select name="obrigatoria" class="admin-input">
+                        <option value="1" {{ 'selected' if not questao or questao.obrigatoria }}>Sim</option>
+                        <option value="0" {{ 'selected' if questao and not questao.obrigatoria }}>Não</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label class="admin-label"><input type="checkbox" name="tem_outro" value="1" {{ 'checked' if questao and questao.tem_outro }}> Incluir opção "Outro" com campo aberto</label>
+            </div>
+
+            <div id="opcoes_wrap" class="{{ 'hidden' if not questao or questao.tipo_resposta == 'texto' or questao.tipo_resposta == 'escala' }}">
+                <label class="admin-label">Opções (uma por linha)</label>
+                <textarea name="opcoes_text" id="opcoes_text" rows="6" class="admin-input">{{ questao.opcoes if questao else '' }}</textarea>
+                <p class="admin-hint">Digite cada opção em uma linha. Para múltipla escolha, cada linha é uma opção.</p>
+            </div>
+
+            <button type="submit" class="admin-btn admin-btn-primary">Salvar</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    var tipo = document.getElementById('tipo_resposta');
+    var wrap = document.getElementById('opcoes_wrap');
+    function toggleOpcoes() {
+        var v = tipo.value;
+        wrap.classList.toggle('hidden', v === 'texto' || v === 'escala');
+    }
+    tipo.addEventListener('change', toggleOpcoes);
+    toggleOpcoes();
+</script>
+{% endblock %}

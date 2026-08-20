@@ -2,6 +2,10 @@ import os
 
 import psycopg
 
+# Configurar DATABASE_URL se não estiver definido
+if not os.getenv("DATABASE_URL"):
+    os.environ["DATABASE_URL"] = "postgresql://david:troque_por_senha_segura@127.0.0.1:5433/lideranca_test"
+
 SCHEMA_SQL = """
 CREATE TABLE IF NOT EXISTS usuarios (
     id              SERIAL PRIMARY KEY,
@@ -10,6 +14,19 @@ CREATE TABLE IF NOT EXISTS usuarios (
     nome            VARCHAR(150) NOT NULL,
     ativo           BOOLEAN DEFAULT TRUE,
     criado_em       TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS pessoas (
+    id              SERIAL PRIMARY KEY,
+    nome_completo   VARCHAR(255) NOT NULL,
+    telefone        VARCHAR(20),
+    ind_whatsapp    BOOLEAN DEFAULT TRUE,
+    email           VARCHAR(255) UNIQUE NOT NULL,
+    nome_empresa    VARCHAR(255),
+    cargo_funcao    VARCHAR(255),
+    cidade_uf       VARCHAR(255),
+    criado_em       TIMESTAMPTZ DEFAULT NOW(),
+    alterado_em     TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS leads (
@@ -73,6 +90,14 @@ CREATE TABLE IF NOT EXISTS palestras_organizacoes (
     UNIQUE (palestra_id, organizacao_id, data_realizacao)
 );
 
+CREATE TABLE IF NOT EXISTS participantes (
+    id              SERIAL PRIMARY KEY,
+    palestra_id     INTEGER NOT NULL REFERENCES palestras(id) ON DELETE CASCADE,
+    pessoa_id       INTEGER REFERENCES pessoas(id) ON DELETE CASCADE,
+    criado_em       TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE (palestra_id, pessoa_id)
+);
+
 CREATE TABLE IF NOT EXISTS avaliacoes (
     id                      SERIAL PRIMARY KEY,
     palestra_organizacao_id INTEGER NOT NULL REFERENCES palestras_organizacoes(id) ON DELETE CASCADE,
@@ -89,10 +114,75 @@ CREATE TABLE IF NOT EXISTS avaliacoes (
     criado_em               TIMESTAMPTZ DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS investigacoes (
+    id                      SERIAL PRIMARY KEY,
+    palestra_organizacao_id INTEGER NOT NULL REFERENCES palestras_organizacoes(id) ON DELETE CASCADE,
+    colaborador_id          INTEGER REFERENCES colaboradores(id),
+    nome_respondente        VARCHAR(150),
+    email_respondente       VARCHAR(255),
+    cargo                   VARCHAR(100),
+    departamento            VARCHAR(100),
+    q1                      VARCHAR(255),
+    q1_outro                TEXT,
+    q2                      VARCHAR(255),
+    q3                      SMALLINT CHECK (q3 BETWEEN 0 AND 10),
+    q4                      VARCHAR(255),
+    q5                      TEXT,
+    q6                      TEXT,
+    q7                      TEXT,
+    q8                      TEXT,
+    q8_outro                TEXT,
+    q9                      VARCHAR(255),
+    q10                     TEXT,
+    criado_em               TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS formularios (
+    id              SERIAL PRIMARY KEY,
+    titulo          VARCHAR(255) NOT NULL,
+    descricao       TEXT,
+    texto_final     TEXT,
+    tipo            VARCHAR(30) NOT NULL DEFAULT 'investigacao',
+    ativo           BOOLEAN DEFAULT TRUE,
+    criado_em       TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS questoes (
+    id              SERIAL PRIMARY KEY,
+    formulario_id   INTEGER NOT NULL REFERENCES formularios(id) ON DELETE CASCADE,
+    ordem           INTEGER NOT NULL DEFAULT 0,
+    bloco           VARCHAR(150),
+    pergunta        TEXT NOT NULL,
+    tipo_resposta   VARCHAR(30) NOT NULL DEFAULT 'texto',
+    obrigatoria     BOOLEAN DEFAULT TRUE,
+    tem_outro       BOOLEAN DEFAULT FALSE,
+    opcoes          TEXT,
+    criado_em       TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS respostas_formulario (
+    id                      SERIAL PRIMARY KEY,
+    formulario_id           INTEGER NOT NULL REFERENCES formularios(id) ON DELETE CASCADE,
+    questao_id              INTEGER NOT NULL REFERENCES questoes(id) ON DELETE CASCADE,
+    palestra_organizacao_id INTEGER NOT NULL REFERENCES palestras_organizacoes(id) ON DELETE CASCADE,
+    colaborador_id          INTEGER REFERENCES colaboradores(id),
+    nome_respondente        VARCHAR(150),
+    email_respondente       VARCHAR(255),
+    cargo                   VARCHAR(100),
+    departamento            VARCHAR(100),
+    valor                   TEXT,
+    criado_em               TIMESTAMPTZ DEFAULT NOW()
+);
+
 CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status);
 CREATE INDEX IF NOT EXISTS idx_leads_created_at ON leads(created_at);
 CREATE INDEX IF NOT EXISTS idx_colaboradores_org ON colaboradores(organizacao_id);
 CREATE INDEX IF NOT EXISTS idx_avaliacoes_palestra_org ON avaliacoes(palestra_organizacao_id);
+CREATE INDEX IF NOT EXISTS idx_investigacoes_palestra_org ON investigacoes(palestra_organizacao_id);
+CREATE INDEX IF NOT EXISTS idx_questoes_formulario ON questoes(formulario_id);
+CREATE INDEX IF NOT EXISTS idx_respostas_formulario ON respostas_formulario(palestra_organizacao_id);
+CREATE INDEX IF NOT EXISTS idx_participantes_palestra ON participantes(palestra_id);
+CREATE INDEX IF NOT EXISTS idx_pessoas_email ON pessoas(email);
 """
 
 
@@ -105,6 +195,42 @@ def get_db_connection():
 
 MIGRATIONS = [
     "ALTER TABLE leads ADD COLUMN IF NOT EXISTS organizacao_id INTEGER REFERENCES organizacoes(id) ON DELETE SET NULL",
+    "ALTER TABLE palestras ADD COLUMN IF NOT EXISTS formulario_investigacao_id INTEGER REFERENCES formularios(id) ON DELETE SET NULL",
+    "ALTER TABLE palestras ADD COLUMN IF NOT EXISTS formulario_avaliacao_id INTEGER REFERENCES formularios(id) ON DELETE SET NULL",
+    "ALTER TABLE formularios ADD COLUMN IF NOT EXISTS texto_final TEXT",
+    # Adicionar tabela pessoas e atualizar participantes
+    """DO $$
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'pessoas') THEN
+            CREATE TABLE pessoas (
+                id              SERIAL PRIMARY KEY,
+                nome_completo   VARCHAR(255) NOT NULL,
+                telefone        VARCHAR(20),
+                ind_whatsapp    BOOLEAN DEFAULT TRUE,
+                email           VARCHAR(255) UNIQUE NOT NULL,
+                nome_empresa    VARCHAR(255),
+                cargo_funcao    VARCHAR(255),
+                cidade_uf       VARCHAR(255),
+                criado_em       TIMESTAMPTZ DEFAULT NOW(),
+                alterado_em     TIMESTAMPTZ DEFAULT NOW()
+            );
+        END IF;
+    END $$;""",
+    """DO $$
+    DECLARE col_exists INTEGER;
+    BEGIN
+        SELECT COUNT(*) INTO col_exists
+        FROM information_schema.columns
+        WHERE table_name = 'participantes' AND column_name = 'pessoa_id';
+        IF col_exists = 0 THEN
+            ALTER TABLE participantes RENAME COLUMN nome TO nome_old;
+            ALTER TABLE participantes RENAME COLUMN email TO email_old;
+            ALTER TABLE participantes ADD COLUMN pessoa_id INTEGER REFERENCES pessoas(id) ON DELETE CASCADE;
+            ALTER TABLE participantes ADD CONSTRAINT participantes_palestra_pessoa_unique UNIQUE (palestra_id, pessoa_id);
+            ALTER TABLE participantes DROP COLUMN nome_old;
+            ALTER TABLE participantes DROP COLUMN email_old;
+        END IF;
+    END $$;""",
 ]
 
 

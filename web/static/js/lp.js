@@ -101,6 +101,12 @@
             submitBtn.textContent = 'Quero agendar uma conversa';
 
             if (xhr.status >= 200 && xhr.status < 300) {
+                var resp = null;
+                try { resp = JSON.parse(xhr.responseText); } catch (ex) {}
+                if (resp && resp.redirect) {
+                    window.location.href = resp.redirect;
+                    return;
+                }
                 form.style.display = 'none';
                 successBox.classList.remove('hidden');
             } else {
