@@ -208,19 +208,20 @@ def criar_participante():
                         UPDATE respostas_log SET participante_id = %s WHERE id = %s
                     """, (participante_id, log_id))
 
-                # Registrar respostas do formulário
-                for questao_id, valor in respostas.items():
-                    # Verificar se a questão tem campo "outro"
-                    tem_outro_query = query("SELECT tem_outro FROM questoes WHERE id = %s", (questao_id,), one=True)
-                    tem_outro = tem_outro_query["tem_outro"] if tem_outro_query else False
-
-                    valor_outro = valor.get("outro", "") if isinstance(valor, dict) and tem_outro else None
-                    valor_principal = valor["valor"] if isinstance(valor, dict) else valor
-
-                    cursor.execute("""
-                        INSERT INTO respostas_formulario (questao_id, participante_id, valor)
-                        VALUES (%s, %s, %s)
-                    """, (questao_id, participante_id, str(valor_principal)))
+                # TEMPORARIAMENTE DESABILITADO - Processar apenas log, tabela sera corrigida depois
+                # # Registrar respostas do formulário
+                # for questao_id, valor in respostas.items():
+                #     # Verificar se a questão tem campo "outro"
+                #     tem_outro_query = query("SELECT tem_outro FROM questoes WHERE id = %s", (questao_id,), one=True)
+                #     tem_outro = tem_outro_query["tem_outro"] if tem_outro_query else False
+                #
+                #     valor_outro = valor.get("outro", "") if isinstance(valor, dict) and tem_outro else None
+                #     valor_principal = valor["valor"] if isinstance(valor, dict) else valor
+                #
+                #     cursor.execute("""
+                #         INSERT INTO respostas_formulario (questao_id, participante_id, valor)
+                #         VALUES (%s, %s, %s)
+                #     """, (questao_id, participante_id, str(valor_principal)))
 
         conn.close()
 
