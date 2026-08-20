@@ -170,12 +170,14 @@ def criar_participante():
                     ))
                     pessoa_id = cursor.fetchone()[0]
 
-                # Criar vínculo participante (se ainda não existir)
+                # Criar vínculo participante (se ainda não existir) e obter ID
                 cursor.execute("""
                     INSERT INTO participantes (palestra_id, pessoa_id)
                     VALUES (%s, %s)
-                    ON CONFLICT (palestra_id, pessoa_id) DO NOTHING
+                    ON CONFLICT (palestra_id, pessoa_id) DO UPDATE SET id = participantes.id
+                    RETURNING id
                 """, (palestra_id, pessoa_id))
+                participante_id = cursor.fetchone()[0]
 
                 # Registrar respostas do formulário
                 for questao_id, valor in respostas.items():
@@ -187,9 +189,9 @@ def criar_participante():
                     valor_principal = valor["valor"] if isinstance(valor, dict) else valor
 
                     cursor.execute("""
-                        INSERT INTO respostas_formulario (formulario_id, questao_id, palestra_organizacao_id, valor)
-                        VALUES (%s, %s, %s, %s)
-                    """, (formulario_id, questao_id, palestra_id, str(valor_principal)))
+                        INSERT INTO respostas_formulario (formulario_id, questao_id, palestra_organizacao_id, participante_id, valor)
+                        VALUES (%s, %s, %s, %s, %s)
+                    """, (formulario_id, questao_id, palestra_id, participante_id, str(valor_principal)))
 
         conn.close()
 
