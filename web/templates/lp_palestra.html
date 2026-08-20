@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ palestra.titulo }} | Liderança Conectada 360 Graus</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/lp.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+        .form-section {
+            border: 2px solid #D4A017;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            background: #fff;
+        }
+        .form-section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #D4A017;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .form-section-number {
+            width: 32px;
+            height: 32px;
+            background: #D4A017;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+        .question-block {
+            margin-bottom: 24px;
+        }
+        .question-label {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .question-required {
+            color: #dc2626;
+        }
+        .question-options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+        .error-message {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 4px;
+            display: none;
+        }
+        .error-message.show {
+            display: block;
+        }
+        .input-error {
+            border-color: #dc2626 !important;
+        }
+        .submit-btn {
+            background: linear-gradient(135deg, #D4A017 0%, #B8860B 100%);
+            color: white;
+            font-weight: 600;
+            padding: 16px 32px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 160, 23, 0.3);
+        }
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .success-message {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <nav class="fixed top-0 w-full h-[60px] bg-white/95 border-b border-gray-100 z-50 flex items-center px-6 justify-between">
+        <img src="/static/images/lideranca_conectada.png" alt="Liderança Conectada 360" class="h-10 w-auto object-contain">
+    </nav>
+
+    <section class="min-h-screen pt-[80px] pb-12 px-4">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <span class="inline-block px-4 py-1 bg-[#D4A017]/10 text-[#D4A017] rounded-full text-sm font-semibold mb-4">
+                    Liderança Conectada 360 Graus
+                </span>
+                <h1 class="serif text-3xl md:text-4xl font-bold text-gray-900 mb-4">{% if formulario %}{{ formulario.titulo }}{% else %}{{ palestra.titulo }}{% endif %}</h1>
+                {% if formulario %}
+                <p class="text-gray-600 max-w-2xl mx-auto">{{ formulario.descricao }}</p>
+                {% else %}
+                <p class="text-gray-600 max-w-2xl mx-auto">{{ palestra.descricao if palestra.descricao else '' }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Form -->
+            <div id="form-container">
+                <form id="participante-form" novalidate>
+                    <input type="hidden" name="palestra_id" value="{{ palestra.id }}">
+                    <input type="hidden" name="formulario_id" value="{{ formulario.id if formulario else '' }}">
+
+                    <!-- Seção 1: Dados da Pessoa -->
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <div class="form-section-number">1</div>
+                            <span>Seus Dados</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="question-block">
+                                <label class="question-label">
+                                    Nome completo <span class="question-required">*</span>
+                                </label>
+                                <input type="text" name="nome_completo" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4A017] focus:border-transparent"
+                                    placeholder="Seu nome completo">
+                                <div class="error-message" data-field="nome_completo"></div>
+                            </div>
+
+                            <div class="question-block">
+                                <label class="question-label">
+                                    E-mail <span class="question-required">*</span>
+                                </label>
+                                <input type="email" name="email" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4A017] focus:border-transparent"
+                                    placeholder="seu@email.com">
+                                <div class="error-message" data-field="email"></div>
+                            </div>
+
+                            <div class="question-block">
+                                <label class="question-label">
+                                    Telefone <span class="question-required">*</span>
+                                </label>
+                                <input type="tel" name="telefone" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4A017] focus:border-transparent"
+                                    placeholder="(XX) XXXXX-XXXX">
+                                <div class="error-message" data-field="telefone"></div>
+                            </div>
+
+                            <div class="question-block">
+                                <label class="question-label">
+                                    Cidade/UF <span class="question-required">*</span>
+                                </label>
+                                <input type="text" name="cidade_uf" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4A017] focus:border-transparent"
+                                    placeholder="São Paulo / SP">
+                                <div class="error-message" data-field="cidade_uf"></div>
+                            </div>
+
+                            <div class="question-block">
+                                <label class="question-label">Empresa</label>
+                                <input type="text" name="nome_empresa"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4A017] focus:border-transparent"
+                                    placeholder="Nome da empresa">
+                            </div>
+
+                            <div class="question-block">
+                                <label class="question-label">Cargo/Função</label>
+                                <input type="text" name="cargo_funcao"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4A017] focus:border-transparent"
+                                    placeholder="Seu cargo ou função">
+                            </div>
+                        </div>
+
+                        <div class="question-block mt-4">
+                            <label class="question-options">
+                                <input type="checkbox" name="ind_whatsapp" value="true" checked>
+                                <span>Este número é WhatsApp</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Seção 2: Formulário -->
+                    {% if formulario and questoes %}
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <div class="form-section-number">2</div>
+                            <span>{{ formulario.titulo }}</span>
+                        </div>
+
+                        {% set current_bloco = "" %}
+                        {% for questao in questoes %}
+                            {% if questao.bloco != current_bloco %}
+                                {% if current_bloco %}</div>{% endif %}
+                                {% set current_bloco = questao.bloco %}
+                                <div class="mb-6">
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ questao.bloco }}</h3>
+                            {% endif %}
+
+                            <div class="question-block" data-questao-id="{{ questao.id }}">
+                                <label class="question-label">
+                                    {{ questao.pergunta }}
+                                    {% if questao.obrigatoria %}<span class="question-required">*</span>{% endif %}
+                                </label>
+
+                                {% if questao.tipo_resposta == 'texto' %}
+                                    <textarea name="respostas[{{ questao.id }}]"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4A017] focus:border-transparent"
+                                        rows="3"
+                                        {% if questao.obrigatoria %}required{% endif %}></textarea>
+
+                                {% elif questao.tipo_resposta == 'multipla_escolha' %}
+                                    <div class="question-options">
+                                        {% set opcoes_list = questao.opcoes.split('|') %}
+                                        {% for opcao in opcoes_list %}
+                                            {% if opcao != "Outro" or not questao.tem_outro %}
+                                            <label>
+                                                <input type="radio"
+                                                    name="respostas[{{ questao.id }}][valor]"
+                                                    value="{{ opcao }}"
+                                                    {% if questao.obrigatoria %}required{% endif %}>
+                                                <span>{{ opcao }}</span>
+                                            </label>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if questao.tem_outro %}
+                                            <label class="mt-2">
+                                                <input type="radio"
+                                                    name="respostas[{{ questao.id }}][valor]"
+                                                    value="Outro"
+                                                    onchange="toggleOutroField({{ questao.id }}, this.checked)">
+                                                <span>Outro</span>
+                                            </label>
+                                            <input type="text"
+                                                name="respostas[{{ questao.id }}][outro]"
+                                                id="outro_{{ questao.id }}"
+                                                class="hidden ml-6 mt-2 px-3 py-1 border border-gray-300 rounded-lg w-full"
+                                                placeholder="Especifique...">
+                                        {% endif %}
+                                    </div>
+
+                                {% elif questao.tipo_resposta == 'multipla_selecao' %}
+                                    <div class="question-options">
+                                        {% set opcoes_list = questao.opcoes.split('|') %}
+                                        {% for opcao in opcoes_list %}
+                                            {% if opcao != "Outro" or not questao.tem_outro %}
+                                            <label>
+                                                <input type="checkbox"
+                                                    name="respostas[{{ questao.id }}][]"
+                                                    value="{{ opcao }}">
+                                                <span>{{ opcao }}</span>
+                                            </label>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if questao.tem_outro %}
+                                            <label class="mt-2">
+                                                <input type="checkbox"
+                                                    name="respostas[{{ questao.id }}][]"
+                                                    value="Outro"
+                                                    onchange="toggleOutroField({{ questao.id }}, this.checked)">
+                                                <span>Outro</span>
+                                            </label>
+                                            <input type="text"
+                                                name="respostas[{{ questao.id }}][outro]"
+                                                id="outro_{{ questao.id }}"
+                                                class="hidden ml-6 mt-2 px-3 py-1 border border-gray-300 rounded-lg w-full"
+                                                placeholder="Especifique...">
+                                        {% endif %}
+                                    </div>
+
+                                {% elif questao.tipo_resposta == 'escala' %}
+                                    <div class="question-options">
+                                        <!-- Barra de progresso visual -->
+                                        <div class="mb-4">
+                                            <progress id="progress_{{ questao.id }}"
+                                                value="0"
+                                                min="0"
+                                                max="10"
+                                                class="w-full h-3 rounded-lg overflow-hidden"
+                                                style="appearance: none; border: none;"></progress>
+                                            <style>
+                                                #progress_{{ questao.id }}::-webkit-progress-bar {
+                                                    background-color: #e5e7eb;
+                                                    border-radius: 8px;
+                                                }
+                                                #progress_{{ questao.id }}::-webkit-progress-value {
+                                                    background: linear-gradient(90deg, #D4A017 0%, #B8860B 100%);
+                                                    border-radius: 8px;
+                                                    transition: width 0.3s ease;
+                                                }
+                                                #progress_{{ questao.id }}::-moz-progress-bar {
+                                                    background: linear-gradient(90deg, #D4A017 0%, #B8860B 100%);
+                                                    border-radius: 8px;
+                                                }
+                                            </style>
+                                        </div>
+
+                                        <!-- Opções de 0 a 10 -->
+                                        <div class="flex items-center gap-4">
+                                            <span class="text-sm text-gray-600">0</span>
+                                            {% set opcoes_list = questao.opcoes.split('|') %}
+                                            {% for opcao in opcoes_list %}
+                                                <label class="flex flex-col items-center">
+                                                    <input type="radio"
+                                                        name="respostas[{{ questao.id }}][valor]"
+                                                        value="{{ opcao }}"
+                                                        {% if questao.obrigatoria %}required{% endif %}
+                                                        onchange="updateProgress({{ questao.id }}, this.value)">
+                                                    <span class="text-xs mt-1">{{ opcao }}</span>
+                                                </label>
+                                            {% endfor %}
+                                            <span class="text-sm text-gray-600">10</span>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                <div class="error-message" data-field="questao_{{ questao.id }}"></div>
+                            </div>
+                        {% endfor %}
+                        {% if current_bloco %}</div>{% endif %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Submit -->
+                    <button type="submit" class="submit-btn">
+                        Enviar Respostas
+                    </button>
+
+                    <p class="text-center text-sm text-gray-500 mt-4">
+                        Seus dados estão seguros e não serão compartilhados.
+                    </p>
+                </form>
+            </div>
+
+            <!-- Success Message -->
+            <div id="success-container" class="success-message hidden">
+                <svg class="mx-auto mb-4" width="64" height="64" viewBox="0 0 64 64" fill="none">
+                    <circle cx="32" cy="32" r="32" fill="#10b981" opacity="0.15"/>
+                    <path d="M20 32l10 10 14-18" stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <h3 class="serif text-2xl font-bold text-gray-900 mb-2">Obrigado por participar!</h3>
+                {% if formulario %}
+                <p class="text-gray-600">{{ formulario.texto_final }}</p>
+                {% else %}
+                <p class="text-gray-600">Seus dados foram registrados com sucesso.</p>
+                {% endif %}
+            </div>
+
+            <!-- Popup Modal -->
+            <div id="popup-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+                <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 text-center transform transition-all scale-95 opacity-0" id="popup-content">
+                    <div class="mb-6">
+                        <svg class="mx-auto" width="64" height="64" viewBox="0 0 64 64" fill="none">
+                            <circle cx="32" cy="32" r="32" fill="#D4A017" opacity="0.15"/>
+                            <path d="M20 32l10 10 14-18" stroke="#D4A017" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="serif text-2xl font-bold text-gray-900 mb-4">Obrigado por participar!</h3>
+                    {% if formulario and formulario.texto_final %}
+                    <p class="text-gray-600 text-lg leading-relaxed">{{ formulario.texto_final }}</p>
+                    {% else %}
+                    <p class="text-gray-600 text-lg leading-relaxed">Seus dados foram registrados com sucesso.</p>
+                    {% endif %}
+                    <button id="close-popup" class="mt-8 px-8 py-3 bg-[#D4A017] hover:bg-[#B8860B] text-white font-semibold rounded-lg transition-all transform hover:scale-105">
+                        Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function toggleOutroField(questaoId, checked) {
+            const outroField = document.getElementById('outro_' + questaoId);
+            if (outroField) {
+                outroField.classList.toggle('hidden', !checked);
+                if (checked) {
+                    outroField.focus();
+                } else {
+                    outroField.value = '';  // Limpa o campo quando desmarcado
+                }
+            }
+        }
+
+        function updateProgress(questaoId, value) {
+            const progressBar = document.getElementById('progress_' + questaoId);
+            if (progressBar) {
+                progressBar.value = value;
+            }
+        }
+
+        document.getElementById('participante-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Clear previous errors
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.classList.remove('show');
+                el.textContent = '';
+            });
+            document.querySelectorAll('.input-error').forEach(el => {
+                el.classList.remove('input-error');
+            });
+
+            const formData = new FormData(this);
+            const data = {
+                nome_completo: formData.get('nome_completo'),
+                telefone: formData.get('telefone'),
+                email: formData.get('email'),
+                cidade_uf: formData.get('cidade_uf'),
+                nome_empresa: formData.get('nome_empresa') || '',
+                cargo_funcao: formData.get('cargo_funcao') || '',
+                ind_whatsapp: formData.get('ind_whatsapp') === 'true',
+                palestra_id: parseInt(formData.get('palestra_id')),
+                formulario_id: parseInt(formData.get('formulario_id')) || null,
+                respostas: {}
+            };
+
+            // Collect form responses
+            const formDataEntries = Array.from(formData.entries());
+            formDataEntries.forEach(([key, value]) => {
+                if (key.startsWith('respostas[')) {
+                    const match = key.match(/respostas\[(\d+)\](?:\[(\w+)\])?/);
+                    if (match) {
+                        const questaoId = match[1];
+                        const subfield = match[2] || 'valor';
+
+                        if (!data.respostas[questaoId]) {
+                            data.respostas[questaoId] = {};
+                        }
+
+                        if (subfield === 'valor' && !data.respostas[questaoId].valor) {
+                            data.respostas[questaoId].valor = value;
+                        } else if (subfield === 'outro') {
+                            data.respostas[questaoId].outro = value;
+                        } else if (Array.isArray(data.respostas[questaoId])) {
+                            data.respostas[questaoId].push(value);
+                        } else {
+                            data.respostas[questaoId] = [value];
+                        }
+                    }
+                }
+            });
+
+            // Convert single-value arrays to simple values for radio buttons
+            Object.keys(data.respostas).forEach(key => {
+                if (Array.isArray(data.respostas[key]) && data.respostas[key].length === 1) {
+                    data.respostas[key] = data.respostas[key][0];
+                }
+            });
+
+            const submitBtn = this.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+
+            try {
+                const response = await fetch('/api/participante', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    // Show popup modal
+                    const popup = document.getElementById('popup-modal');
+                    const popupContent = document.getElementById('popup-content');
+
+                    popup.classList.remove('hidden');
+                    setTimeout(() => {
+                        popupContent.classList.remove('scale-95', 'opacity-0');
+                        popupContent.classList.add('scale-100', 'opacity-100');
+                    }, 10);
+                } else {
+                    // Show errors
+                    if (result.errors) {
+                        result.errors.forEach(error => {
+                            const errorDiv = document.querySelector(`[data-field="${error.field}"]`);
+                            if (errorDiv) {
+                                errorDiv.classList.add('show');
+                                errorDiv.textContent = error.message;
+
+                                const input = document.querySelector(`[name="${error.field}"]`);
+                                if (input) {
+                                    input.classList.add('input-error');
+                                }
+                            }
+                        });
+                    }
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Enviar Respostas';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erro ao enviar formulário. Tente novamente.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Enviar Respostas';
+            }
+        });
+
+        // Phone mask
+        document.querySelector('input[name="telefone"]').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.slice(0, 11);
+
+            if (value.length > 0) {
+                if (value.length <= 2) {
+                    value = `(${value}`;
+                } else if (value.length <= 7) {
+                    value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
+                } else {
+                    value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7)}`;
+                }
+            }
+            e.target.value = value;
+        });
+
+        // Popup close handlers
+        const popup = document.getElementById('popup-modal');
+        const popupContent = document.getElementById('popup-content');
+        const closePopupBtn = document.getElementById('close-popup');
+
+        function closePopup() {
+            popupContent.classList.remove('scale-100', 'opacity-100');
+            popupContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                popup.classList.add('hidden');
+            }, 300);
+        }
+
+        closePopupBtn.addEventListener('click', closePopup);
+
+        // Close when clicking outside the popup content
+        popup.addEventListener('click', function(e) {
+            if (e.target === popup) {
+                closePopup();
+            }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !popup.classList.contains('hidden')) {
+                closePopup();
+            }
+        });
+    </script>
+</body>
+</html>

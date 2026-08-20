@@ -1,0 +1,551 @@
+:root {
+    --burgundy: #5C2A2A;
+    --gold: #D4A017;
+    --bg-zen: #FDFCFB;
+    --text-body: #4A4A4A;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-zen);
+    color: var(--text-body);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.8;
+}
+
+.serif { font-family: 'Playfair Display', serif; }
+
+/* ========== HERO ========== */
+.lp-hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #FDFCFB 0%, #fff 50%, #FBF9F5 100%);
+}
+
+.lp-hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    min-height: calc(100vh - 60px);
+}
+
+.lp-tag {
+    display: inline-block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 6px 16px;
+    margin-bottom: 24px;
+}
+
+.lp-hero-text h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--burgundy);
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.lp-subtitle {
+    font-size: 1.05rem;
+    color: #888;
+    font-weight: 300;
+    margin-bottom: 32px;
+    max-width: 480px;
+}
+
+.lp-benefits {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.lp-benefits li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: var(--text-body);
+}
+
+/* ========== FORM CARD ========== */
+.lp-form-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.lp-form-card {
+    background: #fff;
+    border: 1px solid rgba(212, 160, 23, 0.3);
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 20px 60px rgba(92, 42, 42, 0.06);
+}
+
+.lp-form-card h2 {
+    color: var(--burgundy);
+    font-size: 1.3rem;
+    line-height: 1.3;
+    margin-bottom: 28px;
+    text-align: center;
+}
+
+.lp-field {
+    margin-bottom: 16px;
+}
+
+.lp-field label {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #999;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.lp-field input,
+.lp-field select {
+    width: 100%;
+    padding: 10px 0;
+    border: none;
+    border-bottom: 1px solid #e0e0e0;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--text-body);
+    background: transparent;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.lp-field input:focus,
+.lp-field select:focus {
+    border-bottom-color: var(--gold);
+}
+
+.lp-field input::placeholder {
+    color: #ccc;
+    font-weight: 300;
+}
+
+.lp-field select {
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23999' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0 center;
+    padding-right: 20px;
+}
+
+.lp-field .lp-error {
+    font-size: 11px;
+    color: #c0392b;
+    margin-top: 4px;
+    display: none;
+}
+
+.lp-field.has-error input,
+.lp-field.has-error select {
+    border-bottom-color: #c0392b;
+}
+
+.lp-field.has-error .lp-error {
+    display: block;
+}
+
+.lp-cta-button {
+    width: 100%;
+    padding: 14px;
+    background: var(--burgundy);
+    color: #fff;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 8px;
+}
+
+.lp-cta-button:hover {
+    background: var(--gold);
+}
+
+.lp-cta-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.lp-disclaimer {
+    font-size: 10px;
+    color: #bbb;
+    text-align: center;
+    margin-top: 12px;
+}
+
+/* Success */
+.lp-success {
+    text-align: center;
+    padding: 30px 0;
+}
+
+.lp-success svg {
+    margin-bottom: 16px;
+}
+
+.lp-success h3 {
+    color: var(--burgundy);
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+.lp-success p {
+    font-size: 0.9rem;
+    color: #888;
+    font-weight: 300;
+}
+
+.hidden { display: none !important; }
+
+/* ========== STATS ========== */
+.lp-stats {
+    background: var(--burgundy);
+    padding: 80px 24px;
+    color: #fff;
+}
+
+.lp-stats-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.lp-stats-tag {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.lp-stats-inner h2 {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    margin-bottom: 48px;
+    font-weight: 400;
+    font-style: italic;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.lp-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    text-align: left;
+}
+
+.lp-stat-item {
+    border-top: 1px solid rgba(212, 160, 23, 0.3);
+    padding-top: 24px;
+}
+
+.lp-stat-title {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.lp-stat-subtitle {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 12px;
+}
+
+.lp-stat-label {
+    font-size: 13px;
+    font-weight: 300;
+    opacity: 0.65;
+    line-height: 1.7;
+}
+
+/* ========== METHODOLOGY ========== */
+.lp-method {
+    padding: 80px 24px;
+    background: #fff;
+}
+
+.lp-method-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.lp-method-inner h2 {
+    color: var(--burgundy);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    margin-bottom: 48px;
+}
+
+.lp-method-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.lp-method-card {
+    border: 1px solid rgba(212, 160, 23, 0.3);
+    padding: 36px 28px;
+    text-align: left;
+    transition: all 0.3s;
+}
+
+.lp-method-card:hover {
+    border-color: var(--gold);
+    background: var(--bg-zen);
+}
+
+.lp-method-tag {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--gold);
+    margin-bottom: 12px;
+}
+
+.lp-method-card h3 {
+    color: var(--burgundy);
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+.lp-method-card p {
+    font-size: 0.85rem;
+    color: #888;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+/* ========== SPECIALISTS ========== */
+.lp-specialists {
+    padding: 80px 24px;
+    background: var(--bg-zen);
+}
+
+.lp-specialists-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.lp-specialists-inner h2 {
+    color: var(--burgundy);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    margin-bottom: 48px;
+}
+
+.lp-specialists-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+}
+
+.lp-specialist {
+    text-align: center;
+}
+
+.lp-specialist-photo {
+    border: 1px solid var(--gold);
+    padding: 4px;
+    display: inline-block;
+    margin-bottom: 16px;
+}
+
+.lp-specialist-photo img {
+    width: 220px;
+    height: 280px;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+}
+
+.lp-specialist h3 {
+    color: var(--burgundy);
+    font-size: 1.3rem;
+    margin-bottom: 6px;
+}
+
+.lp-specialist p {
+    font-size: 0.85rem;
+    color: #888;
+    font-weight: 300;
+    max-width: 260px;
+    margin: 0 auto;
+}
+
+/* ========== SOCIAL LINKS (especialistas) ========== */
+.lp-social-links {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.lp-social-links a {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(212, 160, 23, 0.4);
+    color: var(--burgundy);
+    transition: all 0.25s;
+    text-decoration: none;
+}
+
+.lp-social-links a:hover {
+    background: var(--gold);
+    color: #fff;
+    border-color: var(--gold);
+}
+
+/* ========== FOOTER ========== */
+.lp-footer {
+    background: #fafafa;
+    padding: 60px 24px;
+    text-align: center;
+    border-top: 1px solid #eee;
+}
+
+.lp-footer-logo {
+    height: 40px;
+    object-fit: contain;
+    opacity: 0.5;
+    margin-bottom: 20px;
+}
+
+.lp-footer .serif {
+    color: var(--burgundy);
+    font-size: 1.3rem;
+    font-style: italic;
+    margin-bottom: 24px;
+}
+
+.lp-footer-social {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.lp-footer-social a {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(92, 42, 42, 0.2);
+    color: #888;
+    transition: all 0.25s;
+    text-decoration: none;
+}
+
+.lp-footer-social a:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+.lp-footer-contact {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #999;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .lp-hero-content {
+        grid-template-columns: 1fr;
+        padding: 40px 16px;
+        gap: 40px;
+        min-height: auto;
+    }
+
+    .lp-hero-text h1 {
+        text-align: center;
+    }
+
+    .lp-subtitle {
+        text-align: center;
+        max-width: 100%;
+    }
+
+    .lp-tag {
+        display: block;
+        text-align: center;
+    }
+
+    .lp-benefits {
+        align-items: flex-start;
+    }
+
+    .lp-form-card {
+        padding: 28px 20px;
+    }
+
+    .lp-stats-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .lp-method-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .lp-specialists-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .lp-footer-contact {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .lp-hero-content {
+        padding: 24px 12px;
+    }
+
+    .lp-form-card {
+        padding: 24px 16px;
+    }
+
+    .lp-specialist-photo img {
+        width: 180px;
+        height: 230px;
+    }
+}

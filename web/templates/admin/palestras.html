@@ -1,0 +1,214 @@
+{% extends "admin/base.html" %}
+{% block title %}Palestras{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-page-header">
+        <div>
+            <h1 class="admin-page-title">Palestras</h1>
+            <p class="admin-page-subtitle">Eventos, vínculos com organizações e links de avaliação</p>
+        </div>
+        <a href="{{ url_for('admin.palestra_nova') }}" class="admin-btn admin-btn-primary">+ Nova Palestra</a>
+    </div>
+
+    <div class="admin-panel">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Data</th>
+                    <th>Local</th>
+                    <th>Modalidade</th>
+                    <th>Formulários</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in palestras %}
+                <tr>
+                    <td>{{ p.titulo }}</td>
+                    <td>{{ p.data_realizacao.strftime('%d/%m/%Y') if p.data_realizacao else '' }}</td>
+                    <td>{{ p.local or '' }}</td>
+                    <td>{{ p.modalidade }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('admin.palestra_formulario', palestra_id=p.id) }}" class="admin-form-inline">
+                            <select name="formulario_investigacao_id" class="admin-input admin-input-sm">
+                                <option value="">Investigação: —</option>
+                                {% for f in formularios if f.tipo == 'investigacao' %}
+                                <option value="{{ f.id }}" {{ 'selected' if p.formulario_investigacao_id == f.id }}>{{ f.titulo }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="formulario_avaliacao_id" class="admin-input admin-input-sm">
+                                <option value="">Avaliação: —</option>
+                                {% for f in formularios if f.tipo == 'avaliacao' %}
+                                <option value="{{ f.id }}" {{ 'selected' if p.formulario_avaliacao_id == f.id }}>{{ f.titulo }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="admin-btn admin-btn-sm">Salvar</button>
+                        </form>
+                    </td>
+                    <td class="admin-actions">
+                        <a href="{{ url_for('admin.palestra_editar', palestra_id=p.id) }}" class="admin-btn admin-btn-sm">Editar</a>
+                        <form method="POST" action="{{ url_for('admin.palestra_delete', palestra_id=p.id) }}" onsubmit="return confirm('Remover esta palestra?')">
+                            <button type="submit" class="admin-btn admin-btn-danger admin-btn-sm">Remover</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" class="admin-empty">Nenhuma palestra cadastrada.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="admin-panel" style="margin-top:24px;">
+        <div class="admin-panel-header">
+            <h2 class="admin-panel-title">Vínculos e Links de Avaliação</h2>
+        </div>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Palestra</th>
+                    <th>Organização</th>
+                    <th>Data</th>
+                    <th>Link de Avaliação</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for v in vinculos %}
+                <tr>
+                    <td>{{ v.palestra_titulo or '' }}</td>
+                    <td>{{ v.organizacao_nome or '' }}</td>
+                    <td>{{ v.data_realizacao.strftime('%d/%m/%Y') if v.data_realizacao else '' }}</td>
+                    <td>
+                        <a href="{{ url_for('avaliacao.avaliar', po_id=v.id) }}" target="_blank" class="admin-btn admin-btn-sm">Abrir link</a>
+                    </td>
+                    <td>
+                        <form method="POST" action="{{ url_for('admin.vinculo_delete', vinculo_id=v.id) }}" onsubmit="return confirm('Remover este vínculo?')">
+                            <button type="submit" class="admin-btn admin-btn-danger admin-btn-sm">Remover</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="admin-empty">Nenhum vínculo criado.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="admin-panel" style="margin-top:24px;">
+        <div class="admin-panel-header">
+            <h2 class="admin-panel-title">Participantes por Palestra</h2>
+            <p class="admin-panel-subtitle">Colaboradores convidados. Ao preencher a landing page com o e-mail cadastrado, serão direcionados ao formulário da palestra.</p>
+        </div>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Palestra</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pa in participantes %}
+                <tr>
+                    <td>{{ pa.palestra_titulo or '' }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('admin.participante_editar', participante_id=pa.id) }}" class="admin-form-inline">
+                            <input type="text" name="nome" value="{{ pa.nome }}" class="admin-input admin-input-sm" required>
+                    </td>
+                    <td>
+                            <input type="email" name="email" value="{{ pa.email }}" class="admin-input admin-input-sm" required>
+                    </td>
+                    <td>
+                            <button type="submit" class="admin-btn admin-btn-sm">Salvar</button>
+                        </form>
+                        <form method="POST" action="{{ url_for('admin.participante_delete', participante_id=pa.id) }}" class="inline" onsubmit="return confirm('Remover este participante?')">
+                            <button type="submit" class="admin-btn admin-btn-danger admin-btn-sm">Remover</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" class="admin-empty">Nenhum participante cadastrado.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="admin-panel admin-panel-narrow" style="margin-top:24px;">
+        <div class="admin-panel-header">
+            <h2 class="admin-panel-title">Adicionar Participante</h2>
+        </div>
+        <form method="POST" action="{{ url_for('admin.participante_novo', palestra_id=0) }}" class="admin-form" id="participante-form">
+            <div class="admin-field">
+                <label for="ppalestra_id">Palestra</label>
+                <select id="ppalestra_id" name="palestra_id" required>
+                    <option value="">Selecione</option>
+                    {% for p in palestras %}
+                    <option value="{{ p.id }}">{{ p.titulo }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="admin-field">
+                <label for="pnome">Nome *</label>
+                <input type="text" id="pnome" name="nome" required>
+            </div>
+            <div class="admin-field">
+                <label for="pemail">E-mail *</label>
+                <input type="email" id="pemail" name="email" required>
+            </div>
+            <div class="admin-form-actions">
+                <button type="submit" class="admin-btn admin-btn-primary">Adicionar</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="admin-panel admin-panel-narrow" style="margin-top:24px;">
+        <div class="admin-panel-header">
+            <h2 class="admin-panel-title">Vincular Organização a Palestra</h2>
+        </div>
+        <form method="POST" action="{{ url_for('admin.palestra_vincular', palestra_id=0) }}" class="admin-form" id="vincular-form">
+            <div class="admin-field">
+                <label for="palestra_id">Palestra</label>
+                <select id="palestra_id" name="palestra_id" required>
+                    <option value="">Selecione</option>
+                    {% for p in palestras %}
+                    <option value="{{ p.id }}">{{ p.titulo }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="admin-field">
+                <label for="organizacao_id">Organização</label>
+                <select id="organizacao_id" name="organizacao_id" required>
+                    <option value="">Selecione</option>
+                    {% for o in organizacoes %}
+                    <option value="{{ o.id }}">{{ o.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="admin-field">
+                <label for="data_realizacao">Data de realização</label>
+                <input type="date" id="data_realizacao" name="data_realizacao">
+            </div>
+            <div class="admin-form-actions">
+                <button type="submit" class="admin-btn admin-btn-primary">Vincular</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('vincular-form').addEventListener('submit', function (e) {
+        var palestraId = document.getElementById('palestra_id').value;
+        if (!palestraId) { e.preventDefault(); return; }
+        this.action = this.action.replace('/0', '/' + palestraId);
+    });
+
+    document.getElementById('participante-form').addEventListener('submit', function (e) {
+        var palestraId = document.getElementById('ppalestra_id').value;
+        if (!palestraId) { e.preventDefault(); return; }
+        this.action = this.action.replace('/0', '/' + palestraId);
+    });
+</script>
+{% endblock %}

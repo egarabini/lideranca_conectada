@@ -1,0 +1,159 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-page-header">
+        <h1 class="admin-page-title">Dashboard</h1>
+        <p class="admin-page-subtitle">Visão geral da operação</p>
+    </div>
+
+    <div class="admin-cards">
+        <div class="admin-card">
+            <div class="admin-card-label">Total de Leads</div>
+            <div class="admin-card-value">{{ total_leads }}</div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-label">Leads Novos</div>
+            <div class="admin-card-value">{{ leads_novos }}</div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-label">Leads Convertidos</div>
+            <div class="admin-card-value">{{ leads_convertidos }}</div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-label">Organizações</div>
+            <div class="admin-card-value">{{ total_organizacoes }}</div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-label">Palestras</div>
+            <div class="admin-card-value">{{ total_palestras }}</div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-label">Avaliações</div>
+            <div class="admin-card-value">{{ total_avaliacoes }}</div>
+        </div>
+    </div>
+
+    <div class="admin-charts">
+        <div class="admin-panel admin-chart">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title">Leads por Mês</h2>
+            </div>
+            <div class="admin-chart-body">
+                <canvas id="chartLeadsMes"></canvas>
+            </div>
+        </div>
+        <div class="admin-panel admin-chart">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title">Leads por Status</h2>
+            </div>
+            <div class="admin-chart-body">
+                <canvas id="chartLeadsStatus"></canvas>
+            </div>
+        </div>
+        <div class="admin-panel admin-chart admin-chart-wide">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title">Média de Avaliação por Palestra</h2>
+            </div>
+            <div class="admin-chart-body">
+                <canvas id="chartAvaliacoes"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-panel">
+        <div class="admin-panel-header">
+            <h2 class="admin-panel-title">Leads Recentes</h2>
+            <a href="{{ url_for('admin.leads') }}" class="admin-btn admin-btn-ghost">Ver todos</a>
+        </div>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Empresa</th>
+                    <th>Cargo</th>
+                    <th>Status</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lead in leads_recentes %}
+                <tr>
+                    <td>{{ lead.nome }}</td>
+                    <td>{{ lead.empresa }}</td>
+                    <td>{{ lead.cargo }}</td>
+                    <td><span class="admin-badge admin-badge-{{ lead.status }}">{{ lead.status }}</span></td>
+                    <td>{{ lead.created_at.strftime('%d/%m/%Y') if lead.created_at else '' }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="admin-empty">Nenhum lead ainda.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var burgundy = '#5C2A2A';
+    var gold = '#D4A017';
+
+    // Leads por mês
+    var meses = {{ leads_por_mes | map(attribute='mes') | list | tojson }};
+    var totaisMes = {{ leads_por_mes | map(attribute='total') | list | tojson }};
+    new Chart(document.getElementById('chartLeadsMes'), {
+        type: 'bar',
+        data: {
+            labels: meses,
+            datasets: [{
+                label: 'Leads',
+                data: totaisMes,
+                backgroundColor: burgundy,
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+        }
+    });
+
+    // Leads por status
+    var statusLabels = {{ leads_por_status | map(attribute='status') | list | tojson }};
+    var statusTotais = {{ leads_por_status | map(attribute='total') | list | tojson }};
+    new Chart(document.getElementById('chartLeadsStatus'), {
+        type: 'doughnut',
+        data: {
+            labels: statusLabels,
+            datasets: [{
+                data: statusTotais,
+                backgroundColor: ['#B7791F', '#1A73E8', '#27AE60', '#9E9E9E']
+            }]
+        },
+        options: { responsive: true }
+    });
+
+    // Avaliações por palestra
+    var palestrasLabels = {{ avaliacoes_por_palestra | map(attribute='titulo') | list | tojson }};
+    var palestrasMedias = {{ avaliacoes_por_palestra | map(attribute='media') | list | tojson }};
+    new Chart(document.getElementById('chartAvaliacoes'), {
+        type: 'bar',
+        data: {
+            labels: palestrasLabels,
+            datasets: [{
+                label: 'Média (1-5)',
+                data: palestrasMedias,
+                backgroundColor: gold,
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            indexAxis: 'y',
+            plugins: { legend: { display: false } },
+            scales: { x: { min: 0, max: 5, ticks: { stepSize: 1 } } }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "admin/base.html" %}
+{% block title %}Usuários{% endblock %}
+{% block content %}
+<div class="admin-page">
+    <div class="admin-page-header">
+        <div>
+            <h1 class="admin-page-title">Usuários</h1>
+            <p class="admin-page-subtitle">Acesso à área administrativa</p>
+        </div>
+        <a href="{{ url_for('admin.usuario_novo') }}" class="admin-btn admin-btn-primary">+ Novo Usuário</a>
+    </div>
+
+    <div class="admin-panel">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Ativo</th>
+                    <th>Criado em</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in usuarios %}
+                <tr>
+                    <td>{{ u.nome }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>{{ 'Sim' if u.ativo else 'Não' }}</td>
+                    <td>{{ u.criado_em.strftime('%d/%m/%Y') if u.criado_em else '' }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('admin.usuario_delete', usuario_id=u.id) }}" onsubmit="return confirm('Remover este usuário?')">
+                            <button type="submit" class="admin-btn admin-btn-danger admin-btn-sm">Remover</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="admin-empty">Nenhum usuário cadastrado.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
