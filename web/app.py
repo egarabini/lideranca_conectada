@@ -126,6 +126,7 @@ def criar_participante():
         return jsonify({"status": "error", "message": "Serviço indisponível"}), 503
 
     # GRAVAR LOG PRIMEIRO - Backup completo antes de qualquer operação
+    log_id = None
     try:
         json_completo = {
             "palestra_id": palestra_id,
@@ -141,10 +142,8 @@ def criar_participante():
                 RETURNING id
             """, (json.dumps(json_completo, ensure_ascii=False),))
             log_id = cursor.fetchone()[0]
-            conn.commit()
     except Exception as log_err:
         # Se falhar o log, ainda tenta continuar mas registra o erro
-        log_id = None
         print(f"ERRO ao gravar log: {log_err}")
 
     try:
