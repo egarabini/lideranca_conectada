@@ -125,11 +125,33 @@ def criar_participante():
     if conn is None:
         return jsonify({"status": "error", "message": "Serviço indisponível"}), 503
 
+    # GRAVAR LOG PRIMEIRO - Backup completo antes de qualquer operação
+    try:
+        json_completo = {
+            "palestra_id": palestra_id,
+            "formulario_id": formulario_id,
+            "data": data,
+            "respostas": respostas,
+            "recebido_em": None  # Será preenchido pelo banco
+        }
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                INSERT INTO respostas_log (json_completo)
+                VALUES (%s)
+                RETURNING id
+            """, (json.dumps(json_completo, ensure_ascii=False),))
+            log_id = cursor.fetchone()[0]
+            conn.commit()
+    except Exception as log_err:
+        # Se falhar o log, ainda tenta continuar mas registra o erro
+        log_id = None
+        print(f"ERRO ao gravar log: {log_err}")
+
     try:
         with conn:
             with conn.cursor() as cursor:
                 # Verificar se pessoa já existe pelo e-mail
-                cursor.execute("SELECT id FROM pessoas WHERE LOWER(email) = %s", (email,))
+                cursor.execute("SELECT id FROM pessoas WHERE LOWER(email) = %s", (email,),)
                 pessoa_result = cursor.fetchone()
 
                 if pessoa_result:
@@ -180,19 +202,11 @@ def criar_participante():
                 """, (palestra_id, pessoa_id))
                 participante_id = cursor.fetchone()[0]
 
-                # Salvar JSON completo na tabela de logs (backup)
-                json_completo = {
-                    "palestra_id": palestra_id,
-                    "pessoa_id": pessoa_id,
-                    "participante_id": participante_id,
-                    "data": data,
-                    "respostas": respostas,
-                    "criado_em": None  # Será preenchido pelo banco
-                }
-                cursor.execute("""
-                    INSERT INTO respostas_log (participante_id, json_completo)
-                    VALUES (%s, %s)
-                """, (participante_id, json.dumps(json_completo, ensure_ascii=False)))
+                # Atualizar log com participante_id
+                if log_id:
+                    cursor.execute("""
+                        UPDATE respostas_log SET participante_id = %s WHERE id = %s
+                    """, (participante_id, log_id))
 
                 # Registrar respostas do formulário
                 for questao_id, valor in respostas.items():
