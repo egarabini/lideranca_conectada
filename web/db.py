@@ -199,6 +199,8 @@ MIGRATIONS = [
     "ALTER TABLE palestras ADD COLUMN IF NOT EXISTS formulario_avaliacao_id INTEGER REFERENCES formularios(id) ON DELETE SET NULL",
     "ALTER TABLE formularios ADD COLUMN IF NOT EXISTS texto_final TEXT",
     "ALTER TABLE respostas_formulario ADD COLUMN IF NOT EXISTS participante_id INTEGER REFERENCES participantes(id) ON DELETE CASCADE",
+    "ALTER TABLE respostas_formulario ALTER COLUMN formulario_id DROP NOT NULL",
+    "ALTER TABLE respostas_formulario ALTER COLUMN palestra_organizacao_id DROP NOT NULL",
     # Tabela de logs para backup completo de respostas
     """DO $$
     BEGIN
