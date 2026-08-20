@@ -199,6 +199,20 @@ MIGRATIONS = [
     "ALTER TABLE palestras ADD COLUMN IF NOT EXISTS formulario_avaliacao_id INTEGER REFERENCES formularios(id) ON DELETE SET NULL",
     "ALTER TABLE formularios ADD COLUMN IF NOT EXISTS texto_final TEXT",
     "ALTER TABLE respostas_formulario ADD COLUMN IF NOT EXISTS participante_id INTEGER REFERENCES participantes(id) ON DELETE CASCADE",
+    # Tabela de logs para backup completo de respostas
+    """DO $$
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'respostas_log') THEN
+            CREATE TABLE respostas_log (
+                id              SERIAL PRIMARY KEY,
+                participante_id INTEGER REFERENCES participantes(id) ON DELETE CASCADE,
+                json_completo   JSONB NOT NULL,
+                criado_em       TIMESTAMPTZ DEFAULT NOW()
+            );
+            CREATE INDEX idx_respostas_log_participante ON respostas_log(participante_id);
+            CREATE INDEX idx_respostas_log_criado_em ON respostas_log(criado_em);
+        END IF;
+    END$$""",
     # Adicionar tabela pessoas e atualizar participantes
     """DO $$
     BEGIN

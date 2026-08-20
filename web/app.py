@@ -1,3 +1,4 @@
+import json
 import os
 
 import psycopg
@@ -178,6 +179,20 @@ def criar_participante():
                     RETURNING id
                 """, (palestra_id, pessoa_id))
                 participante_id = cursor.fetchone()[0]
+
+                # Salvar JSON completo na tabela de logs (backup)
+                json_completo = {
+                    "palestra_id": palestra_id,
+                    "pessoa_id": pessoa_id,
+                    "participante_id": participante_id,
+                    "data": data,
+                    "respostas": respostas,
+                    "criado_em": None  # Será preenchido pelo banco
+                }
+                cursor.execute("""
+                    INSERT INTO respostas_log (participante_id, json_completo)
+                    VALUES (%s, %s)
+                """, (participante_id, json.dumps(json_completo, ensure_ascii=False)))
 
                 # Registrar respostas do formulário
                 for questao_id, valor in respostas.items():
