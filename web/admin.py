@@ -420,7 +420,7 @@ def participante_respostas(participante_id):
             """SELECT q.pergunta, q.bloco, r.valor, q.tipo_resposta
                FROM respostas_formulario r
                JOIN questoes q ON q.id = r.questao_id
-               WHERE r.formulario_id = %s AND r.participante_id = %s
+               WHERE q.formulario_id = %s AND r.participante_id = %s
                ORDER BY q.ordem""",
             (participante["formulario_investigacao_id"], participante_id)
         ) or []

@@ -189,9 +189,9 @@ def criar_participante():
                     valor_principal = valor["valor"] if isinstance(valor, dict) else valor
 
                     cursor.execute("""
-                        INSERT INTO respostas_formulario (formulario_id, questao_id, palestra_organizacao_id, participante_id, valor)
-                        VALUES (%s, %s, %s, %s, %s)
-                    """, (formulario_id, questao_id, palestra_id, participante_id, str(valor_principal)))
+                        INSERT INTO respostas_formulario (questao_id, participante_id, valor)
+                        VALUES (%s, %s, %s)
+                    """, (questao_id, participante_id, str(valor_principal)))
 
         conn.close()
 
