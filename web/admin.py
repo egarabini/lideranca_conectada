@@ -78,11 +78,9 @@ def dashboard():
     total_avaliacoes = query("SELECT COUNT(*) AS c FROM avaliacoes", one=True)["c"]
 
     leads_recentes = query(
-        """SELECT l.id, p.nome_completo as nome, p.nome_empresa as empresa,
-                  p.cargo_funcao as cargo, l.status, l.created_at
-           FROM leads l
-           JOIN pessoas p ON p.id = l.pessoa_id
-           ORDER BY l.created_at DESC LIMIT 8"""
+        """SELECT id, nome as nome, empresa as empresa, cargo as cargo, status, created_at
+           FROM leads
+           ORDER BY created_at DESC LIMIT 8"""
     ) or []
 
     # Dados para gráficos
@@ -130,7 +128,6 @@ def leads():
                   p.nome_empresa as empresa, p.cargo_funcao as cargo, p.cidade_uf,
                   o.nome AS organizacao_nome
                FROM leads l
-               JOIN pessoas p ON p.id = l.pessoa_id
                LEFT JOIN organizacoes o ON o.id = l.organizacao_id
                WHERE l.status = %s ORDER BY l.created_at DESC""",
             (status,),
@@ -138,11 +135,10 @@ def leads():
     else:
         rows = query(
             """SELECT l.id, l.status, l.source, l.created_at, l.updated_at,
-                  p.nome_completo as nome, p.email as email, p.telefone as whatsapp,
-                  p.nome_empresa as empresa, p.cargo_funcao as cargo, p.cidade_uf,
+                  l.nome as nome, l.email as email, l.whatsapp as whatsapp,
+                  l.empresa as empresa, l.cargo as cargo, l.cidade_uf as cidade_uf,
                   o.nome AS organizacao_nome
                FROM leads l
-               JOIN pessoas p ON p.id = l.pessoa_id
                LEFT JOIN organizacoes o ON o.id = l.organizacao_id
                ORDER BY l.created_at DESC"""
         ) or []
@@ -197,20 +193,18 @@ def leads_exportar():
     if status:
         rows = query(
             """SELECT l.id, l.status, l.created_at,
-                  p.nome_completo as nome, p.email as email, p.telefone as whatsapp,
-                  p.nome_empresa as empresa, p.cargo_funcao as cargo, p.cidade_uf
+                  l.nome as nome, l.email as email, l.whatsapp as whatsapp,
+                  l.empresa as empresa, l.cargo as cargo, l.cidade_uf as cidade_uf
                FROM leads l
-               JOIN pessoas p ON p.id = l.pessoa_id
                WHERE l.status = %s ORDER BY l.created_at DESC""",
             (status,)
         ) or []
     else:
         rows = query(
             """SELECT l.id, l.status, l.created_at,
-                  p.nome_completo as nome, p.email as email, p.telefone as whatsapp,
-                  p.nome_empresa as empresa, p.cargo_funcao as cargo, p.cidade_uf
+                  l.nome as nome, l.email as email, l.whatsapp as whatsapp,
+                  l.empresa as empresa, l.cargo as cargo, l.cidade_uf as cidade_uf
                FROM leads l
-               JOIN pessoas p ON p.id = l.pessoa_id
                ORDER BY l.created_at DESC"""
         ) or []
 
@@ -234,6 +228,205 @@ def leads_exportar():
         mimetype="text/csv",
         headers={"Content-Disposition": f"attachment; filename={filename}"},
     )
+
+
+# ---------------- PESSOAS ----------------
+@admin_bp.route("/pessoas")
+@login_required
+def pessoas():
+    rows = query(
+        """SELECT p.id, p.nome_completo, p.email, p.telefone, p.ind_whatsapp,
+                  p.nome_empresa, p.cargo_funcao, p.cidade_uf, p.criado_em
+           FROM pessoas p
+           ORDER BY p.criado_em DESC"""
+    ) or []
+    total = query("SELECT COUNT(*) AS c FROM pessoas", one=True)["c"]
+    return render_template("admin/pessoas.html", pessoas=rows, total=total)
+
+
+@admin_bp.route("/pessoas/<int:pessoa_id>/editar", methods=["GET", "POST"])
+@login_required
+def pessoa_editar(pessoa_id):
+    pessoa = query("SELECT * FROM pessoas WHERE id = %s", (pessoa_id,), one=True)
+    if not pessoa:
+        flash("Pessoa não encontrada.", "error")
+        return redirect(url_for("admin.pessoas"))
+
+    if request.method == "POST":
+        nome_completo = request.form.get("nome_completo", "").strip()
+        email = request.form.get("email", "").strip()
+        telefone = request.form.get("telefone", "").strip()
+        nome_empresa = request.form.get("nome_empresa", "").strip()
+        cargo_funcao = request.form.get("cargo_funcao", "").strip()
+        cidade_uf = request.form.get("cidade_uf", "").strip()
+        ind_whatsapp = bool(request.form.get("ind_whatsapp"))
+
+        if not nome_completo or not email:
+            flash("Nome e e-mail são obrigatórios.", "error")
+        else:
+            execute(
+                """UPDATE pessoas SET nome_completo = %s, email = %s, telefone = %s,
+                   ind_whatsapp = %s, nome_empresa = %s, cargo_funcao = %s, cidade_uf = %s,
+                   alterado_em = NOW()
+                   WHERE id = %s""",
+                (nome_completo, email, telefone, ind_whatsapp, nome_empresa,
+                 cargo_funcao, cidade_uf, pessoa_id),
+            )
+            flash("Pessoa atualizada.", "success")
+            return redirect(url_for("admin.pessoas"))
+
+    return render_template("admin/pessoa_form.html", pessoa=pessoa)
+
+
+@admin_bp.route("/pessoas/<int:pessoa_id>/delete", methods=["POST"])
+@login_required
+def pessoa_delete(pessoa_id):
+    execute("DELETE FROM pessoas WHERE id = %s", (pessoa_id,))
+    flash("Pessoa excluída.", "success")
+    return redirect(url_for("admin.pessoas"))
+
+
+# ---------------- PARTICIPANTES ----------------
+@admin_bp.route("/participantes")
+@login_required
+def participantes():
+    # Verificar se há filtro por palestra
+    palestra_filtro = request.args.get("palestra", type=int)
+
+    # Construir query base
+    if palestra_filtro:
+        rows = query(
+            """SELECT pa.id, pa.palestra_id, pa.criado_em,
+                      p.nome_completo, p.email, p.telefone,
+                      pal.titulo AS palestra_titulo, o.nome AS organizacao_nome
+               FROM participantes pa
+               JOIN pessoas p ON pa.pessoa_id = p.id
+               JOIN palestras pal ON pal.id = pa.palestra_id
+               LEFT JOIN palestras_organizacoes po ON po.palestra_id = pa.palestra_id
+               LEFT JOIN organizacoes o ON o.id = po.organizacao_id
+               WHERE pa.palestra_id = %s
+               ORDER BY pa.criado_em DESC""",
+            (palestra_filtro,)
+        ) or []
+        total = query("SELECT COUNT(*) AS c FROM participantes WHERE palestra_id = %s",
+                      (palestra_filtro,), one=True)["c"]
+    else:
+        rows = query(
+            """SELECT pa.id, pa.palestra_id, pa.criado_em,
+                      p.nome_completo, p.email, p.telefone,
+                      pal.titulo AS palestra_titulo, o.nome AS organizacao_nome
+               FROM participantes pa
+               JOIN pessoas p ON pa.pessoa_id = p.id
+               JOIN palestras pal ON pal.id = pa.palestra_id
+               LEFT JOIN palestras_organizacoes po ON po.palestra_id = pa.palestra_id
+               LEFT JOIN organizacoes o ON o.id = po.organizacao_id
+               ORDER BY pa.criado_em DESC"""
+        ) or []
+        total = query("SELECT COUNT(*) AS c FROM participantes", one=True)["c"]
+
+    # Obter palestras para filtro
+    palestras = query("SELECT id, titulo FROM palestras WHERE ativo = TRUE ORDER BY titulo") or []
+
+    return render_template("admin/participantes.html", participantes=rows,
+                          total=total, palestras=palestras, palestra_filtro=palestra_filtro)
+
+
+@admin_bp.route("/participantes/novo", methods=["GET", "POST"])
+@login_required
+def participantes_criar():
+    if request.method == "POST":
+        palestra_id = request.form.get("palestra_id", type=int)
+        pessoa_id = request.form.get("pessoa_id", type=int)
+
+        if not palestra_id or not pessoa_id:
+            flash("Selecione uma palestra e uma pessoa.", "error")
+        else:
+            try:
+                execute(
+                    "INSERT INTO participantes (palestra_id, pessoa_id) VALUES (%s, %s)",
+                    (palestra_id, pessoa_id),
+                )
+                flash("Participante registrado.", "success")
+                return redirect(url_for("admin.participantes"))
+            except Exception:
+                flash("Este participante já está registrado nesta palestra.", "error")
+
+    palestras = query("SELECT id, titulo FROM palestras WHERE ativo = TRUE ORDER BY titulo") or []
+    pessoas = query("SELECT id, nome_completo, email FROM pessoas ORDER BY nome_completo") or []
+    return render_template("admin/participante_form.html",
+                          palestras=palestras, pessoas=pessoas)
+
+
+@admin_bp.route("/participantes/<int:participante_id>/editar", methods=["POST"])
+@login_required
+def participantes_editar(participante_id):
+    participante = query(
+        "SELECT * FROM participantes WHERE id = %s",
+        (participante_id,), one=True
+    )
+    if not participante:
+        flash("Participante não encontrado.", "error")
+        return redirect(url_for("admin.participantes"))
+
+    palestra_id = request.form.get("palestra_id", type=int)
+    pessoa_id = request.form.get("pessoa_id", type=int)
+
+    if not palestra_id or not pessoa_id:
+        flash("Selecione uma palestra e uma pessoa.", "error")
+    else:
+        execute(
+            "UPDATE participantes SET palestra_id = %s, pessoa_id = %s WHERE id = %s",
+            (palestra_id, pessoa_id, participante_id),
+        )
+        flash("Participante atualizado.", "success")
+
+    return redirect(url_for("admin.participantes"))
+
+
+@admin_bp.route("/participantes/<int:participante_id>/delete", methods=["POST"])
+@login_required
+def participantes_excluir(participante_id):
+    execute("DELETE FROM participantes WHERE id = %s", (participante_id,))
+    flash("Participante excluído.", "success")
+    return redirect(url_for("admin.participantes"))
+
+
+@admin_bp.route("/participantes/<int:participante_id>/respostas")
+@login_required
+def participante_respostas(participante_id):
+    # Buscar dados do participante
+    participante = query(
+        """SELECT pa.id, pa.palestra_id, pa.criado_em,
+                  p.nome_completo, p.email,
+                  pal.titulo AS palestra_titulo, pal.formulario_investigacao_id,
+                  o.nome AS organizacao_nome
+           FROM participantes pa
+           JOIN pessoas p ON pa.pessoa_id = p.id
+           JOIN palestras pal ON pal.id = pa.palestra_id
+           LEFT JOIN palestras_organizacoes po ON po.palestra_id = pa.palestra_id
+           LEFT JOIN organizacoes o ON o.id = po.organizacao_id
+           WHERE pa.id = %s""",
+        (participante_id,), one=True
+    )
+
+    if not participante:
+        flash("Participante não encontrado.", "error")
+        return redirect(url_for("admin.participantes"))
+
+    # Buscar respostas do formulário para este participante específico
+    respostas = []
+    if participante.get("formulario_investigacao_id"):
+        respostas = query(
+            """SELECT q.pergunta, q.bloco, r.valor, q.tipo_resposta
+               FROM respostas_formulario r
+               JOIN questoes q ON q.id = r.questao_id
+               WHERE r.formulario_id = %s AND r.participante_id = %s
+               ORDER BY q.ordem""",
+            (participante["formulario_investigacao_id"], participante_id)
+        ) or []
+
+    return render_template("admin/participante_respostas.html",
+                          participante=participante, respostas=respostas)
 
 
 # ---------------- ORGANIZAÇÕES ----------------
@@ -707,28 +900,24 @@ def avaliacoes():
 @admin_bp.route("/investigacoes")
 @login_required
 def investigacoes():
-    # Agrupa respostas por respondente (uma linha por pessoa)
+    # Lista todas as respostas de formulários de investigação
     rows = query(
-        """SELECT r.pessoa_id,
-                  pes.nome_completo as nome_respondente,
-                  pes.email as email_respondente,
-                  pes.cargo_funcao as cargo,
+        """SELECT r.id,
+                  r.nome_respondente,
+                  r.email_respondente,
+                  r.cargo,
+                  r.criado_em,
+                  f.titulo AS formulario_titulo,
                   p.titulo AS palestra_titulo,
-                  o.nome AS organizacao_nome,
-                  MAX(r.criado_em) AS criado_em,
-                  MAX(CASE WHEN q.ordem = 3 THEN r.valor END) AS prioridade,
-                  MAX(CASE WHEN q.ordem = 9 THEN r.valor END) AS contato
+                  o.nome AS organizacao_nome
            FROM respostas_formulario r
            LEFT JOIN questoes q ON q.id = r.questao_id
-           LEFT JOIN pessoas pes ON pes.id = r.pessoa_id
            LEFT JOIN formularios f ON f.id = r.formulario_id
-           LEFT JOIN palestras_organizacoes po ON po.palestra_id = f.id
+           LEFT JOIN palestras_organizacoes po ON po.id = r.palestra_organizacao_id
            LEFT JOIN palestras p ON p.id = po.palestra_id
            LEFT JOIN organizacoes o ON o.id = po.organizacao_id
-           WHERE r.pessoa_id IS NOT NULL
-           GROUP BY r.pessoa_id, pes.nome_completo, pes.email, pes.cargo_funcao,
-                    p.titulo, o.nome
-           ORDER BY MAX(r.criado_em) DESC"""
+           WHERE f.tipo = 'investigacao'
+           ORDER BY r.criado_em DESC"""
     ) or []
     return render_template("admin/investigacoes.html", investigacoes=rows)
 

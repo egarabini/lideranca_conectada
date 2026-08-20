@@ -165,6 +165,21 @@ body.admin-body {
     color: var(--burgundy);
 }
 
+.admin-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--burgundy);
+    margin-bottom: 16px;
+}
+
+.admin-card-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+}
+
 /* ===== PANEL / TABLE ===== */
 .admin-panel {
     background: #fff;
@@ -216,6 +231,37 @@ body.admin-body {
 }
 
 .admin-table tr:last-child td { border-bottom: none; }
+
+.admin-table-empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 32px !important;
+}
+
+.admin-table-link {
+    color: var(--burgundy);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s;
+}
+
+.admin-table-link:hover {
+    color: var(--gold);
+    text-decoration: underline;
+}
+
+.admin-table-link-icon {
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.admin-table-link:hover .admin-table-link-icon {
+    opacity: 1;
+}
 
 .admin-empty {
     text-align: center;
@@ -388,11 +434,30 @@ body.admin-body {
 .hidden { display: none; }
 
 /* ===== FILTERS ===== */
+.admin-filters-section {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+}
+
+.admin-filters-header {
+    margin-bottom: 12px;
+}
+
+.admin-filters-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--burgundy);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
 .admin-filters {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
-    margin-bottom: 20px;
 }
 
 .admin-filter-chip {
@@ -408,6 +473,24 @@ body.admin-body {
 
 .admin-filter-chip:hover { border-color: var(--burgundy); color: var(--burgundy); }
 .admin-filter-chip-active { background: var(--burgundy); color: #fff; border-color: var(--burgundy); }
+
+/* ===== BADGES ===== */
+.admin-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.admin-badge-neutral { background: #F5F5F4; color: var(--muted); border: 1px solid var(--border); }
+.admin-badge-neutral:hover { border-color: var(--burgundy); color: var(--burgundy); }
+
+.admin-badge-primary { background: var(--burgundy); color: #fff; border: 1px solid var(--burgundy); }
+.admin-badge-secondary { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+.admin-badge-secondary:hover { border-color: var(--burgundy); color: var(--burgundy); }
 
 .admin-actions {
     display: flex;
